@@ -1,0 +1,66 @@
+name: GlintSMP
+version: 2.0
+main: me.thelionmc.minecraftplugin.GlintSMP
+api-version: '1.20'
+shardLossRadius: 100
+permissions:
+  op:
+    default: op
+commands:
+  shardcount:
+    description: show the amount of shards you have
+  withdraw:
+    description: withdraw invis shards
+  giveinvisiblearmor:
+    description: Give the player the invisible armor set
+    permission: op
+  revive:
+    description: Will revive banned players
+    permission: op
+  setShards:
+    description: Let's operators set the amount of invisshards of others!
+    permission: op
+  givelegendaryitems:
+    description: Gives all legendary items to the player
+    permission: op
+  setpvp:
+    description: Disables / Enables PVP
+    permission: op
+  chooselegendary:
+    description: Will give you an GUI to choose your legendary Power
+  openstaffmenu:
+    description: If Player is staff will open a menu that can control certain things.
+  start:
+    description: Officially starts the server.
+  useability:
+    description: Uses the selected ability.
+  switchability:
+    description: Switches the selected ability.
+  giveportalobsidian:
+    description: Gives the player a portal obsidian item.
+    permission: op
+  setphase:
+    description: Sets the current Progression
+    permission: op
+  getphase:
+    description: Shows current Phase
+    permission: op
+  summonboss:
+    description: Summons Custom Weapon bosses
+    permission: op
+  whitelistall:
+    description: whitelists all players allowed on the smp
+    permission: op
+  invsee:
+    description: invsee player
+    permission: op
+  setshards:
+    description: Sets a Players Shards
+  echest:
+    description: Lets you see the players echest
+    permission: op
+  gettool:
+    description: Lets you use special Tools for Operation of the Server
+    usage: /tool [Tool]
+    permission: op
+

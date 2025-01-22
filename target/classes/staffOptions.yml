@@ -1,0 +1,45 @@
+settings:
+  pvp: false
+  end: false
+  nether: false
+  adventure: false
+  peaceful: false
+  hardcore: false
+  whitelist: true
+  mobspawning: true
+  potion_everyone: uncraftable_potion
+  start_server: false
+  stop_server: false
+potions:
+  absorbsion: false
+  badluck: false
+  badomen: false
+  conduitpower: false
+  darkness: false
+  dolphinsgrace: false
+  fireresistance: false
+  glowing: false
+  haste: false
+  healthboost: false
+  heroofthevillage: false
+  hunger: false
+  invisibility: false
+  jumpboost: false
+  levitation: false
+  luck: false
+  miningfatigue: false
+  nausia: false
+  nightvision: false
+  poison: false
+  regeneration: false
+  resistance: false
+  saturation: false
+  slowfalling: false
+  slowness: false
+  speed: false
+  strength: false
+  waterbreathing: false
+  weakness: false
+  wither: false
+
+
