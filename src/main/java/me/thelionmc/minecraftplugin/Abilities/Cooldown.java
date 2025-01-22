@@ -1,5 +1,6 @@
 package me.thelionmc.minecraftplugin.Abilities;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
@@ -33,9 +34,16 @@ public abstract class Cooldown {
 
     public abstract void execute(Player player);
 
+    public abstract String displayName();
+
     public void useAbility(Player player) {
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 1, 1);
-        cools.put(player.getUniqueId(), System.currentTimeMillis());
-        execute(player);
+        if(!onCooldown(player)) {
+            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 1, 1);
+            cools.put(player.getUniqueId(), System.currentTimeMillis());
+            execute(player);
+        } else {
+            player.getWorld().playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
+            player.sendMessage(ChatColor.AQUA + displayName() + ChatColor.YELLOW + " is on cooldown!");
+        }
     }
 }

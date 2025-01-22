@@ -1,6 +1,7 @@
 package me.thelionmc.minecraftplugin.Groups;
 
 import me.thelionmc.minecraftplugin.Abilities.Ability;
+import me.thelionmc.minecraftplugin.Abilities.AllClasses.AllClassesAbility1;
 import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ public abstract class AbilityGroup {
     private final List<Ability> abilities = new ArrayList<>();
 
     public AbilityGroup() {
+        abilities.add(new AllClassesAbility1()); //ability that everyone has
         defineAbilities();
     }
 
@@ -17,7 +19,7 @@ public abstract class AbilityGroup {
 
     public void useAbility(int x, Player player) {
         if(x < 0 || x >= abilities.size()) {
-            player.sendMessage("Invalid ability number!"); //this shouldnt show
+            player.sendMessage("Invalid ability number!"); //this shouldn't show
             return;
         }
         abilities.get(x).useAbility(player);
