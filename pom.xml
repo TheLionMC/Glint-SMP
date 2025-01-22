@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>me.thelionmc</groupId>
-    <artifactId>glintsmpppppppp</artifactId>
+    <artifactId>glintsmp</artifactId>
     <packaging>jar</packaging>
 
     <name>minecraftplugin</name>
