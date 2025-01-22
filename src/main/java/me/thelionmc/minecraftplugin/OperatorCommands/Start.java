@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -8,10 +8,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
-public class startcommand implements CommandExecutor {
+public class Start implements CommandExecutor {
     private Plugin plugin;
 
-    public startcommand(){
+    public Start(){
        this.plugin = plugin;
     }
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

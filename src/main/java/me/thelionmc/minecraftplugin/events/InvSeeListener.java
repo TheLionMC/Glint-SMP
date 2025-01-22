@@ -1,6 +1,6 @@
 package me.thelionmc.minecraftplugin.events;
 
-import me.thelionmc.minecraftplugin.Commands.invseecommand;
+import me.thelionmc.minecraftplugin.OperatorCommands.Invsee;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -11,8 +11,8 @@ import org.bukkit.inventory.ItemStack;
 
 public class InvSeeListener implements Listener {
 
-    private final invseecommand invseeCommandInstance;
-    public InvSeeListener(invseecommand invseeCommandInstance) {
+    private final Invsee invseeCommandInstance;
+    public InvSeeListener(Invsee invseeCommandInstance) {
         this.invseeCommandInstance = invseeCommandInstance;
     }
     @EventHandler

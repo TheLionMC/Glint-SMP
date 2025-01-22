@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import org.bukkit.*;
 import org.bukkit.command.Command;
@@ -6,7 +6,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class pvpcommands implements CommandExecutor {
+public class PVP implements CommandExecutor {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {

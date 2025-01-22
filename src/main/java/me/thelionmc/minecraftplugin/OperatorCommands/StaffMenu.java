@@ -1,6 +1,5 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
-import com.sk89q.worldedit.bukkit.adapter.BukkitImplAdapter;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import me.thelionmc.minecraftplugin.ShardManager;
 import org.bukkit.*;
@@ -8,7 +7,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -24,14 +22,14 @@ import org.bukkit.potion.PotionEffectType;
 
 import java.util.*;
 
-public class openstaffmenucommand implements CommandExecutor, Listener {
+public class StaffMenu implements CommandExecutor, Listener {
     private GlintSMP mainClass;
     private ShardManager shardManager;
     private UUID selectedPlayerUUID;
     private static final Map<UUID, UUID> playerSelections = new HashMap<>();
     private static final Set<UUID> allPlayers = new HashSet<>();
 
-    public openstaffmenucommand(GlintSMP mainClass, ShardManager shardManager) {
+    public StaffMenu(GlintSMP mainClass, ShardManager shardManager) {
         this.mainClass = mainClass;
         this.shardManager = shardManager;
     }

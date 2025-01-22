@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -7,9 +7,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
-import org.bukkit.inventory.ItemStack;
 
-public class customitemscommand implements CommandExecutor, Listener {
+public class CustomItems implements CommandExecutor, Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("givecustom")) {

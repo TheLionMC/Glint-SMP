@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
@@ -21,13 +21,13 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.util.HashMap;
 import java.util.UUID;
 
-public class invseecommand implements CommandExecutor, Listener {
+public class Invsee implements CommandExecutor, Listener {
     public final HashMap<UUID, Player> inventoryViewers = new HashMap<>();
     private final HashMap<UUID, Integer> updateTasks = new HashMap<>();
     private GlintSMP mainClass;
     private Plugin plugin;
 
-    public invseecommand(Plugin plugin, GlintSMP mainClass) {
+    public Invsee(Plugin plugin, GlintSMP mainClass) {
         this.plugin = plugin;
         this.mainClass = mainClass;
     }

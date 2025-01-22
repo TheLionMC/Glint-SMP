@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class setShards implements CommandExecutor {
+public class SetShards implements CommandExecutor {
 
     private final Map<UUID, Integer> shardCounts = new HashMap<>();
 

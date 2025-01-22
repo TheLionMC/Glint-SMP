@@ -1,5 +1,6 @@
 package me.thelionmc.minecraftplugin;
 
+import me.thelionmc.minecraftplugin.OperatorCommands.*;
 import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.events.Dragondeathevent;
 import me.thelionmc.minecraftplugin.events.ReviveEvent;
@@ -20,9 +21,9 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import java.io.File;
 import java.util.*;
-import me.thelionmc.minecraftplugin.Commands.*;
+import me.thelionmc.minecraftplugin.PlayerCommands.*;
 import me.thelionmc.minecraftplugin.customItems.CleansingBow;
-import me.thelionmc.minecraftplugin.Commands.openstaffmenucommand;
+import me.thelionmc.minecraftplugin.OperatorCommands.StaffMenu;
 import me.thelionmc.minecraftplugin.customItems.*;
 
 public class GlintSMP extends JavaPlugin implements Listener {
@@ -33,21 +34,21 @@ public class GlintSMP extends JavaPlugin implements Listener {
     private CleansingBow cleansingBow;
     private BrisknessAxe brisknessAxe;
     private FreezingTrident freezingTrident;
-    private openstaffmenucommand openstaffMenu;
+    private StaffMenu openstaffMenu;
     private isLegendary isLegendaryClass;
     private KitRules kitRules;
     private ReviveEvent reviveEvent;
     private SetPhase setPhase;
     private SummonBoss summonBoss;
     private BanList<?> bannedPlayers;
-    private invseecommand invseecommand;
+    private Invsee invseecommand;
     public static ItemStack InvisShards;
     private Dragondeathevent dragondeathevent;
-    private echestseecommand echestseecommand;
+    private EchestSee echestseecommand;
     private ActionBarManager abilityManager;
     private ClassManager classManager;
     private ActionBarManager actionBarManager;
-    private abilityKeybinds keys;
+    private AbilityKeybinds keys;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -65,16 +66,16 @@ public class GlintSMP extends JavaPlugin implements Listener {
         reviveEvent = new ReviveEvent(this, this);
         summonBoss = new SummonBoss(brisknessAxe, this, this);
         kitRules = new KitRules(this, this);
-        invseecommand = new invseecommand(this, this);
-        echestseecommand = new echestseecommand(this);
+        invseecommand = new Invsee(this, this);
+        echestseecommand = new EchestSee(this);
         dragondeathevent = new Dragondeathevent(this);
         shardLogic = new ShardManager(this, this);
-        openstaffMenu = new openstaffmenucommand(this, shardLogic);
+        openstaffMenu = new StaffMenu(this, shardLogic);
        
         classManager = new ClassManager(this,
                 this);
         abilityManager = new ActionBarManager(this, classManager, this);
-        keys = new abilityKeybinds(abilityManager);
+        keys = new AbilityKeybinds(abilityManager);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(cleansingBow, this);
@@ -89,31 +90,30 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(shardLogic, this);
         getServer().getPluginManager().registerEvents(classManager, this);
         getServer().getPluginManager().registerEvents(new CoreProtectTool(this), this);
-        getServer().getPluginManager().registerEvents(new toolcommands(), this);
+        getServer().getPluginManager().registerEvents(new Tools(), this);
 
 
         getCommand("giveinvisiblearmor").setExecutor(this);
         getCommand("openstaffmenu").setExecutor(openstaffMenu);
-        getCommand("giveportalobsidian").setExecutor(new givePortalObsidian());
-        getCommand("revive").setExecutor(new revivecommand());
+        getCommand("giveportalobsidian").setExecutor(new GivePortalObsidian());
         getCommand("shardcount").setExecutor(shardLogic);
         getCommand("withdraw").setExecutor(shardLogic);
-        getCommand("setpvp").setExecutor(new pvpcommands());
-        getCommand("start").setExecutor(new startcommand());
+        getCommand("setpvp").setExecutor(new PVP());
+        getCommand("start").setExecutor(new Start());
         getCommand("switchability").setExecutor(keys);
         getCommand("useability").setExecutor(keys);
         getCommand("setphase").setExecutor(setPhase);
         getCommand("getphase").setExecutor(setPhase);
         getCommand("summonboss").setExecutor(summonBoss);
-        getCommand("whitelistall").setExecutor(new preparecommand());
+        getCommand("whitelistall").setExecutor(new WhitelistAll());
         getCommand("invsee").setExecutor(invseecommand);
         getCommand("setshards").setExecutor(shardLogic);
         getCommand("echest").setExecutor(echestseecommand);
-        getCommand("gettool").setExecutor(new toolcommands());
+        getCommand("gettool").setExecutor(new Tools());
 
 
 
-        getCommand("gettool").setTabCompleter(new toolcommands());
+        getCommand("gettool").setTabCompleter(new Tools());
         getCommand("summonboss").setTabCompleter(summonBoss);
         getCommand("withdraw").setTabCompleter(new ShardManager(this, this));
 

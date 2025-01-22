@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
@@ -16,10 +16,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class echestseecommand implements CommandExecutor, Listener {
+public class EchestSee implements CommandExecutor, Listener {
     private final Map<UUID, UUID> viewingEnderChest = new HashMap<>();
     private final GlintSMP plugin;
-    public echestseecommand(GlintSMP plugin) {
+    public EchestSee(GlintSMP plugin) {
         this.plugin = plugin;
     }
     @Override

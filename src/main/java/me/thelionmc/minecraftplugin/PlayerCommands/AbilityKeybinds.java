@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.PlayerCommands;
 
 import me.thelionmc.minecraftplugin.ActionBarManager;
 import org.bukkit.command.Command;
@@ -6,10 +6,10 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
-public class abilityKeybinds implements CommandExecutor {
+public class AbilityKeybinds implements CommandExecutor {
     ActionBarManager abilityManager;
 
-    public abilityKeybinds(ActionBarManager abilityManager) {
+    public AbilityKeybinds(ActionBarManager abilityManager) {
         this.abilityManager = abilityManager;
     }
 

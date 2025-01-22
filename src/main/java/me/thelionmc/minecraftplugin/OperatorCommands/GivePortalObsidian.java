@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 
 import org.bukkit.ChatColor;
@@ -10,7 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class givePortalObsidian implements CommandExecutor {
+public class GivePortalObsidian implements CommandExecutor {
     private final String portalObsidianName = ChatColor.YELLOW + "Portal Obsidian";
     public ItemStack portalObsidian() {
         ItemStack item = new ItemStack(Material.CRYING_OBSIDIAN);

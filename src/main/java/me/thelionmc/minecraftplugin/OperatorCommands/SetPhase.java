@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.command.Command;

@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Commands;
+package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import com.sk89q.worldedit.EditSession;
 import com.sk89q.worldedit.WorldEdit;
@@ -22,7 +22,6 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.configuration.file.YamlConfiguration;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -35,7 +34,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.*;
 
-public class toolcommands implements CommandExecutor, TabCompleter, Listener {
+public class Tools implements CommandExecutor, TabCompleter, Listener {
 
     private final List<String> tools = Arrays.asList("coreprotect", "oneshot", "banhammer", "schematic");
     private final HashMap<UUID, ProtectedArea> pendingSaves = new HashMap<>();
@@ -43,7 +42,7 @@ public class toolcommands implements CommandExecutor, TabCompleter, Listener {
     private final YamlConfiguration savedAreasConfig = YamlConfiguration.loadConfiguration(savedAreasFile);
     private final File schematicFolder = new File("plugins/GlintSMP/schematics");
 
-    public toolcommands() {
+    public Tools() {
         if (!schematicFolder.exists()) {
             schematicFolder.mkdirs();
         }
