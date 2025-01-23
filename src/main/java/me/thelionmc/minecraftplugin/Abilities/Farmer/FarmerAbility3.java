@@ -13,7 +13,7 @@ public class FarmerAbility3 extends Cooldown implements Ability {
 
     public FarmerAbility3() {
         super();
-        this.cooldownSeconds = 273; // Set custom cooldown for Assassin Ability 1
+        this.cooldownSeconds = 272;
     }
 
     public void execute(Player player) {
