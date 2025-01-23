@@ -22,6 +22,7 @@ me\thelionmc\minecraftplugin\Abilities\Miner\MinerAbility3.class
 me\thelionmc\minecraftplugin\customItems\BrisknessAxe$2$1.class
 me\thelionmc\minecraftplugin\Abilities\Medic\MedicAbility1.class
 me\thelionmc\minecraftplugin\Abilities\Assassin\AssassinAbility3.class
+me\thelionmc\minecraftplugin\Abilities\AllClasses\AllClassesAbility1.class
 me\thelionmc\minecraftplugin\Abilities\Explorer\ExplorerAbility2.class
 me\thelionmc\minecraftplugin\Commands\shardrecipecommand.class
 me\thelionmc\minecraftplugin\Abilities\Miner\MinerAbility2.class
