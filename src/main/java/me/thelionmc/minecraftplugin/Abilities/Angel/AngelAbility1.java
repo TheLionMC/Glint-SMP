@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.Abilities.Miner;
+package me.thelionmc.minecraftplugin.Abilities.Angel;
 
 import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.Abilities.Cooldown;
@@ -8,16 +8,17 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MinerAbility1 extends Cooldown implements Ability {
+public class AngelAbility1 extends Cooldown implements Ability {
     Map<UUID, Long> cools = new HashMap<>();
 
-    public MinerAbility1() {
+    public AngelAbility1() {
         super();
-        this.cooldownSeconds = 10; // Set custom cooldown for Assassin Ability 1
+        this.cooldownSeconds = 10;
     }
 
     public void execute(Player player) {
 
     }
-    public String displayName() {return "Ability 1 Miner Class";}
+
+    public String displayName() {return "Ability 1 Angel Class";}
 }
