@@ -13,7 +13,7 @@ public class AngelAbility3 extends Cooldown implements Ability {
 
     public AngelAbility3() {
         super();
-        this.cooldownSeconds = 10;
+        this.cooldownSeconds = 600;
     }
 
     public void execute(Player player) {
