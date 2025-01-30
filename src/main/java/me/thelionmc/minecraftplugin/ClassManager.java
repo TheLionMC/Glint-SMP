@@ -28,11 +28,14 @@ public class ClassManager implements Listener {
         this.classData = YamlConfiguration.loadConfiguration(new File(mainClass.getDataFolder(), "classData.yml"));
 
         classMap.put("Assassin", new Assassin());
-        classMap.put("Explorer", new Explorer());
+        classMap.put("Explorer", new Mischief());
         classMap.put("Farmer", new Farmer());
-        classMap.put("Hunter", new Hunter());
+        classMap.put("Hunter", new Warrior());
         classMap.put("Medic", new Medic());
-        classMap.put("Miner", new Miner());
+        classMap.put("Miner", new Ninja());
+        classMap.put("Angel", new Angel());
+        classMap.put("Aqua", new Aqua());
+        classMap.put("Wizard", new Wizard());
     }
 
     public void saveClassData() {
