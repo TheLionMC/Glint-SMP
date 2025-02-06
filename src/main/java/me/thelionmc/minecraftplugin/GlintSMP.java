@@ -1,5 +1,33 @@
 package me.thelionmc.minecraftplugin;
 
+import me.thelionmc.minecraftplugin.Abilities.AllClasses.AllClassesAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Angel.AngelAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Angel.AngelAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Angel.AngelAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Assassin.AssassinAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Assassin.AssassinAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Assassin.AssassinAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Escapist.EscapistAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Escapist.EscapistAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Escapist.EscapistAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Farmer.FarmerAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Farmer.FarmerAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Farmer.FarmerAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Mischief.MischiefAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Mischief.MischiefAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Mischief.MischiefAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility3;
+import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility1;
+import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility2;
+import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility3;
 import me.thelionmc.minecraftplugin.OperatorCommands.*;
 import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.events.Dragondeathevent;
@@ -20,6 +48,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import java.io.File;
+import java.io.IOException;
 import java.util.*;
 import me.thelionmc.minecraftplugin.PlayerCommands.*;
 import me.thelionmc.minecraftplugin.customItems.CleansingBow;
@@ -58,10 +87,65 @@ public class GlintSMP extends JavaPlugin implements Listener {
         this.bannedPlayers = Bukkit.getBanList(BanList.Type.NAME);
         initInvisShardItem();
 
-        cleansingBow = new CleansingBow(this);
-        brisknessAxe = new BrisknessAxe(this);
-        freezingTrident = new FreezingTrident(this);
-        isLegendaryClass = new isLegendary(cleansingBow, brisknessAxe, freezingTrident);
+        if (shardLogic == null) {
+            shardLogic = new ShardManager(this, this);
+        }
+
+        loadClass(() -> cleansingBow = new CleansingBow(this), "CleansingBow");
+        loadClass(() -> brisknessAxe = new BrisknessAxe(this), "BrisknessAxe");
+        loadClass(() -> freezingTrident = new FreezingTrident(this), "FreezingTrident");
+        loadClass(() -> isLegendaryClass = new isLegendary(cleansingBow, brisknessAxe, freezingTrident), "isLegendary");
+        loadClass(() -> setPhase = new SetPhase(this), "SetPhase");
+        loadClass(() -> reviveEvent = new ReviveEvent(this, this), "ReviveEvent");
+        loadClass(() -> summonBoss = new SummonBoss(brisknessAxe, this, this), "SummonBoss");
+        loadClass(() -> kitRules = new KitRules(this, this), "KitRules");
+        loadClass(() -> invseecommand = new Invsee(this, this), "Invsee");
+        loadClass(() -> echestseecommand = new EchestSee(this), "EchestSee");
+        loadClass(() -> dragondeathevent = new Dragondeathevent(this), "Dragondeathevent");
+        loadClass(() -> shardLogic = new ShardManager(this, this), "ShardManager");
+        loadClass(() -> openstaffMenu = new StaffMenu(this, shardLogic), "StaffMenu");
+        loadClass(() -> classManager = new ClassManager(this, this), "ClassManager");
+        loadClass(() -> abilityManager = new ActionBarManager(this, classManager, this), "ActionBarManager");
+        loadClass(() -> keys = new AbilityKeybinds(abilityManager), "AbilityKeybinds");
+
+        loadClass(() -> new AllClassesAbility1(), "AllClassesAbility1");
+
+        loadClass(() -> new AngelAbility1(), "AngelAbility1");
+        loadClass(() -> new AngelAbility2(), "AngelAbility2");
+        loadClass(() -> new AngelAbility3(), "AngelAbility3");
+
+        loadClass(() -> new AquaAbility1(), "AquaAbility1");
+        loadClass(() -> new AquaAbility2(), "AquaAbility2");
+        loadClass(() -> new AquaAbility3(), "AquaAbility3");
+
+        loadClass(() -> new AssassinAbility1(), "AssassinAbility1");
+        loadClass(() -> new AssassinAbility2(), "AssassinAbility2");
+        loadClass(() -> new AssassinAbility3(), "AssassinAbility3");
+
+        loadClass(() -> new EscapistAbility1(), "EscapistAbility1");
+        loadClass(() -> new EscapistAbility2(), "EscapistAbility2");
+        loadClass(() -> new EscapistAbility3(), "EscapistAbility3");
+
+        loadClass(() -> new FarmerAbility1(), "FarmerAbility1");
+        loadClass(() -> new FarmerAbility2(), "FarmerAbility2");
+        loadClass(() -> new FarmerAbility3(), "FarmerAbility3");
+
+        loadClass(() -> new MedicAbility1(), "MedicAbility1");
+        loadClass(() -> new MedicAbility2(this), "MedicAbility2");
+        loadClass(() -> new MedicAbility3(), "MedicAbility3");
+
+        loadClass(() -> new MischiefAbility1(), "MischiefAbility1");
+        loadClass(() -> new MischiefAbility2(), "MischiefAbility2");
+        loadClass(() -> new MischiefAbility3(), "MischiefAbility3");
+
+        loadClass(() -> new NinjaAbility1(), "NinjaAbility1");
+        loadClass(() -> new NinjaAbility2(), "NinjaAbility2");
+        loadClass(() -> new NinjaAbility3(), "NinjaAbility3");
+
+        loadClass(() -> new WarriorAbility1(), "WarriorAbility1");
+        loadClass(() -> new WarriorAbility2(), "WarriorAbility2");
+        loadClass(() -> new WarriorAbility3(), "WarriorAbility3");
+
         setPhase = new SetPhase(this);
         reviveEvent = new ReviveEvent(this, this);
         summonBoss = new SummonBoss(brisknessAxe, this, this);
@@ -71,9 +155,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         dragondeathevent = new Dragondeathevent(this);
         shardLogic = new ShardManager(this, this);
         openstaffMenu = new StaffMenu(this, shardLogic);
-       
-        classManager = new ClassManager(this,
-                this);
+        ClassManager classManager = new ClassManager(this, this);
         abilityManager = new ActionBarManager(this, classManager, this);
         keys = new AbilityKeybinds(abilityManager);
 
@@ -91,6 +173,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(classManager, this);
         getServer().getPluginManager().registerEvents(new CoreProtectTool(this), this);
         getServer().getPluginManager().registerEvents(new Tools(), this);
+
 
 
         getCommand("giveinvisiblearmor").setExecutor(this);
@@ -132,20 +215,31 @@ public class GlintSMP extends JavaPlugin implements Listener {
     }
     @EventHandler
     public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
-        if (event.getEntity() instanceof Player) {
-            Player player = (Player) event.getEntity();
+        if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
+            Player player = (Player)event.getEntity();
+            Player damager = (Player)event.getDamager();
+            if (damager.getEquipment().getItemInMainHand().getType().toString().toLowerCase().contains("axe") && player.isBlocking() && (int)event.getFinalDamage() == 0) {
+                damager.playSound(damager.getLocation(), Sound.ITEM_SHIELD_BREAK, 5.0F, 5.0F);
+            }
+        }
+    }
+    private void loadClass(Runnable init, String className) {
+        try {
+            init.run();
+        } catch (Exception e) {
+            StackTraceElement[] stackTrace = e.getStackTrace();
+            String errorMessage = "Failed to load " + className + ": " + e.getMessage();
 
-            if (player.isBlocking() && player.getInventory().getItemInOffHand().getType() == Material.SHIELD) {
-                ItemStack damagerItem = null;
+            if (stackTrace.length > 0) {
+                errorMessage += " at line " + stackTrace[0].getLineNumber();
+            }
 
-                if (event.getDamager() instanceof Player) {
-                    damagerItem = ((Player) event.getDamager()).getInventory().getItemInMainHand();
-                } else if (event.getDamager() instanceof org.bukkit.entity.Entity) {
-                    return;
-                }
+            getLogger().severe(errorMessage);
+            e.printStackTrace();
 
-                if (isAxe(damagerItem.getType())) {
-                    player.playSound(player.getLocation(), Sound.ENTITY_ITEM_BREAK, 1.0f, 1.0f);
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                if (player.isOp()) {
+                    player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + errorMessage);
                 }
             }
         }

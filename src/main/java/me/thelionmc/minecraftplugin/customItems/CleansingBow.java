@@ -1,4 +1,5 @@
 package me.thelionmc.minecraftplugin.customItems;
+
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.*;
 import org.bukkit.boss.BarColor;
@@ -28,69 +29,61 @@ import static org.bukkit.Bukkit.*;
 public class CleansingBow implements Listener {
     private GlintSMP mainClass;
     private Plugin plugin;
+
     public Map<UUID, Long> cooldowns = new HashMap<>();
     private Map<UUID, BossBar> playerBossBars = new HashMap<>();
     public int cooldownSeconds = 150;
     int activeSeconds = 40;
 
     public boolean isActive(UUID uuid) {
-        if(cooldowns.containsKey(uuid)) {
+        if (cooldowns.containsKey(uuid)) {
             long lastUse = cooldowns.get(uuid);
             int timeSinceLastUseSeconds = (int) (System.currentTimeMillis() - lastUse) / 1000;
-
-            if(timeSinceLastUseSeconds < activeSeconds) {
-                return true;
-            }
+            return timeSinceLastUseSeconds < activeSeconds;
         }
         return false;
     }
 
     public double percentActive(UUID uuid) {
-        if(isActive(uuid)) {
+        if (isActive(uuid)) {
             long lastUse = cooldowns.get(uuid);
             int timeSinceLastUseSeconds = (int) (System.currentTimeMillis() - lastUse) / 1000;
             return Math.min(1.0, (double) timeSinceLastUseSeconds / activeSeconds);
-        } else {
-            return 0;
         }
+        return 0;
     }
 
     public CleansingBow(GlintSMP glintSMP) {
         this.mainClass = glintSMP;
         this.plugin = glintSMP.getServer().getPluginManager().getPlugin("GlintSMP");
-        init();
+        init(glintSMP);
 
-        BukkitRunnable task = new BukkitRunnable() {
+
+        new BukkitRunnable() {
             @Override
             public void run() {
-                for(Player player : Bukkit.getOnlinePlayers()) {
-                    if (cooldowns.containsKey(player.getUniqueId())) {
-                        if (isActive(player.getUniqueId())) {
-                            if (cooldowns.containsKey(player.getUniqueId())) {
-                                BossBar bossBar = playerBossBars.getOrDefault(player.getUniqueId(), null);
-                                if (bossBar == null) {
-                                    bossBar = getServer().createBossBar("Cleansing Bow Time Remaining", BarColor.PINK, BarStyle.SOLID);
-                                    bossBar.addPlayer(player);
-                                    playerBossBars.put(player.getUniqueId(), bossBar);
-                                }
-
-                                bossBar.setProgress(1 - percentActive(player.getUniqueId()));
-                            }
-                        } else {
-                            BossBar bossBar = playerBossBars.remove(player.getUniqueId());
-                            if (bossBar != null) {
-                                bossBar.removeAll();
-                            }
+                for (Player player : Bukkit.getOnlinePlayers()) {
+                    UUID uuid = player.getUniqueId();
+                    if (isActive(uuid)) {
+                        BossBar bossBar = playerBossBars.computeIfAbsent(uuid, k -> {
+                            BossBar bar = getServer().createBossBar("Cleansing Bow Time Remaining", BarColor.PINK, BarStyle.SOLID);
+                            bar.addPlayer(player);
+                            return bar;
+                        });
+                        bossBar.setProgress(1 - percentActive(uuid));
+                    } else {
+                        BossBar bossBar = playerBossBars.remove(uuid);
+                        if (bossBar != null) {
+                            bossBar.removeAll();
                         }
                     }
                 }
             }
-        };
-        task.runTaskTimer(plugin, 0, 1);
+        }.runTaskTimer(plugin, 0, 20);
     }
 
     public ItemStack TheCleansingBow() {
-        ItemStack item = new ItemStack(Material.BOW, 1);
+        ItemStack item = new ItemStack(Material.BOW);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§4The Cleansing Bow");
         meta.addEnchant(Enchantment.MENDING, 1, true);
@@ -102,16 +95,44 @@ public class CleansingBow implements Listener {
         item.setItemMeta(meta);
         return item;
     }
+
     public ItemStack CleansingShard() {
-        ItemStack item = new ItemStack(Material.AMETHYST_SHARD, 1);
-        ItemMeta meta = item.getItemMeta();
+        ItemStack item1 = new ItemStack(Material.AMETHYST_SHARD);
+        ItemMeta meta = item1.getItemMeta();
         meta.setDisplayName(ChatColor.BOLD + "" + ChatColor.AQUA + "Cleansing Shard");
         meta.setUnbreakable(true);
-        item.setItemMeta(meta);
-        return item;
+        item1.setItemMeta(meta);
+        return item1;
     }
 
-    private void init() {
+    @EventHandler
+    public void onPlayerInteract(PlayerInteractEvent e) {
+        Player player = e.getPlayer();
+        ItemStack item = e.getItem();
+        UUID playerId = player.getUniqueId();
+
+        if (item != null && item.isSimilar(TheCleansingBow())) {
+            if (e.getAction().name().contains("LEFT_CLICK") && player.isSneaking()) {
+                if (System.currentTimeMillis() - cooldowns.getOrDefault(playerId, 0L) > cooldownSeconds * 1000) {
+                    spawnParticlesTowardsPlayer(player);
+                } else {
+                    player.sendMessage(ChatColor.RED + "Cleansing Bow is on Cooldown!");
+                }
+            } else if (e.getAction().name().contains("LEFT_CLICK")) {
+                if (isActive(playerId)) {
+                    if (!player.hasCooldown(Material.BOW)) {
+                        Location location = player.getEyeLocation();
+                        Arrow arrow = player.getWorld().spawnArrow(location, location.getDirection(), 1.5f, 0.0f);
+                        arrow.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 2), true);
+
+                        cooldowns.put(playerId, cooldowns.getOrDefault(playerId, System.currentTimeMillis()) - 2000);
+                        player.setCooldown(Material.BOW, 10);
+                    }
+                }
+            }
+        }
+    }
+    public void init(GlintSMP glintSMP) {
         ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(plugin, "CleansingBowRecipe"), TheCleansingBow());
         shapedRecipe.shape(" BI", "B S", " BI");
         shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(mainClass.getInvisShardItem()));
@@ -120,72 +141,33 @@ public class CleansingBow implements Listener {
         getServer().addRecipe(shapedRecipe);
     }
 
-    @EventHandler
-    public void onPlayerInteract(PlayerInteractEvent e) {
-        ItemStack item = e.getItem();
-        Player player = e.getPlayer();
-
-        if (item != null && item.isSimilar(TheCleansingBow())) {
-            if (e.getAction().name().contains("LEFT_CLICK") && player.isSneaking()) {
-                if (System.currentTimeMillis() - cooldowns.getOrDefault(player.getUniqueId(), 0L) > cooldownSeconds * 1000) {
-                    spawnParticlesTowardsPlayer(player);
-                } else {
-                    player.sendMessage(ChatColor.RED + "Cleansing Bow is on Cooldown!");
-                }
-            } else if (e.getAction().name().contains("LEFT_CLICK")) {
-                if (isActive(player.getUniqueId())) {
-                    if (player.hasCooldown(Material.BOW)) {
-
-                    } else {
-                        Location location = player.getEyeLocation();
-                        Arrow arrow = player.getWorld().spawnArrow(location, location.getDirection(), 1.5f, 0.0f);
-                        arrow.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 2), true);
-                        cooldowns.put(player.getUniqueId(), cooldowns.get(player.getUniqueId()) - 1000 * 2);
-                        player.setCooldown(Material.BOW, 10);
-                    }
-                }
-            }
-        }
-    }
-
-    private void playParticles(Location location, Particle.DustOptions dustOptions) {
-        for (double x = -5; x <= 5; x += 0.5) {
-            for (double z = -5; z <= 5; z += 0.5) {
-                location.getWorld().spawnParticle(Particle.REDSTONE, location.getX() + x, location.getY(), location.getZ() + z, 1, 1, 1, 1, 1, dustOptions);
-            }
-        }
-    }
-
     public void spawnParticlesTowardsPlayer(Player player) {
         new BukkitRunnable() {
             int ticks = 0;
             final int maxTicks = 35;
-            final double speed = 0.5;
             final double spawnDistance = 10.0;
-            Location location = player.getLocation();
 
             @Override
             public void run() {
                 if (ticks >= maxTicks) {
-                    this.cancel();
-                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE,2,1);
+                    cancel();
+                    player.getWorld().playSound(player.getLocation(), Sound.ENTITY_GENERIC_EXPLODE, 2, 1);
                     cooldowns.put(player.getUniqueId(), System.currentTimeMillis());
                     player.sendMessage(ChatColor.AQUA + "Activated the Cleansing Bow!");
                     return;
                 }
-                Location playerLocation = player.getLocation();
                 for (int i = 0; i < 5; i++) {
-                    Location startLocation = playerLocation.clone().add(
+                    Location startLocation = player.getLocation().clone().add(
                             (Math.random() - 0.5) * spawnDistance,
                             (Math.random() - 0.5) * spawnDistance,
                             (Math.random() - 0.5) * spawnDistance
                     );
-                    createParticleLine(startLocation, playerLocation, (double) ticks / maxTicks);
+                    createParticleLine(startLocation, player.getLocation(), (double) ticks / maxTicks);
                 }
                 ticks++;
             }
         }.runTaskTimer(plugin, 0L, 1L);
-        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WARDEN_SONIC_CHARGE, 1,1);
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_WARDEN_SONIC_CHARGE, 1, 1);
     }
 
     private void createParticleLine(Location start, Location end, double progress) {

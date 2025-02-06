@@ -23,19 +23,49 @@ public class ClassManager implements Listener {
     Map<String, AbilityGroup> classMap = new HashMap();
 
     public ClassManager(Plugin plugin, GlintSMP mainClass) {
-        this.plugin = plugin;
-        this.mainClass = mainClass;
-        this.classData = YamlConfiguration.loadConfiguration(new File(mainClass.getDataFolder(), "classData.yml"));
+        System.out.println("Initializing ClassManager...");
 
+        // Assign plugin to the provided parameter if it's not null, otherwise fallback to mainClass
+        this.plugin = plugin != null ? plugin : mainClass;
+
+        if (this.plugin == null) {
+            System.out.println("ERROR: Plugin is null! Please check initialization order.");
+            return; // Early return if the plugin is still null
+        }
+
+        this.mainClass = mainClass;
+
+        // Ensure the plugin's data folder exists
+        if (!mainClass.getDataFolder().exists()) {
+            mainClass.getDataFolder().mkdirs();
+        }
+
+        // Ensure the classData.yml file exists
+        File classDataFile = new File(mainClass.getDataFolder(), "classData.yml");
+        if (!classDataFile.exists()) {
+            try {
+                classDataFile.createNewFile(); // Create the file if it doesn't exist
+            } catch (IOException e) {
+                e.printStackTrace();
+                mainClass.getLogger().severe("Could not create classData.yml file!");
+            }
+        }
+
+        // Load the classData.yml configuration
+        this.classData = YamlConfiguration.loadConfiguration(classDataFile);
+
+        // Initialize the class map
         classMap.put("Assassin", new Assassin());
         classMap.put("Explorer", new Mischief());
         classMap.put("Farmer", new Farmer());
         classMap.put("Hunter", new Warrior());
-        classMap.put("Medic", new Medic());
+        classMap.put("Medic", new Medic(mainClass));
         classMap.put("Miner", new Ninja());
         classMap.put("Angel", new Angel());
         classMap.put("Aqua", new Aqua());
         classMap.put("Wizard", new Wizard());
+
+        System.out.println("ClassManager initialized with plugin: " + (plugin != null ? "Initialized" : "Null"));
     }
 
     public void saveClassData() {
@@ -44,7 +74,6 @@ public class ClassManager implements Listener {
         } catch (IOException var2) {
             var2.printStackTrace();
         }
-
     }
 
     public void setClass(UUID playerID, String className) {
@@ -77,6 +106,5 @@ public class ClassManager implements Listener {
         if (!this.classData.contains(playerID.toString())) {
             this.setClass(playerID, this.randomClass());
         }
-
     }
 }

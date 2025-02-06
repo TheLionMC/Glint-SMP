@@ -9,42 +9,42 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class MedicAbility2 extends Cooldown implements Ability {
-    Map<UUID, Long> cools = new HashMap<>();
-    private Plugin plugin;
-    private GlintSMP main;
+public class MedicAbility2 extends Cooldown implements Ability, Listener {
+    private final GlintSMP plugin;
+    private final FileConfiguration shardData;
+    private final Map<UUID, Long> cools = new HashMap<>();
 
-    public MedicAbility2(Plugin plugin1, GlintSMP main) {
+    public MedicAbility2(GlintSMP plugin) {
         super();
-        this.plugin = plugin1;
-        this.main = main;
+        this.plugin = plugin;
+        this.shardData = plugin.getConfig() != null ? plugin.getConfig() : new YamlConfiguration();
         this.cooldownSeconds = 180;
-
+        plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    private FileConfiguration shardData;
     public int getShards(UUID playerID) {
-        return this.shardData.getInt(playerID.toString());
+        return this.shardData.getInt(playerID.toString(), 0);
     }
-
 
     public void execute(Player player) {
+
         player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "You have started meditating. Do not move or take damage!");
 
         int shards = getShards(player.getUniqueId());
         int meditationTime = Math.min(30, Math.max(10, shards));
-
         double shardMultiplier = 0.5;
-        double maxHealth = player.getMaxHealth();
-        double currentHealth = player.getHealth();
 
         BossBar bossBar = player.getServer().createBossBar(
                 ChatColor.GREEN + "Meditation Time: " + meditationTime + "s",
@@ -59,29 +59,46 @@ public class MedicAbility2 extends Cooldown implements Ability {
 
             @Override
             public void run() {
+                if (player.isDead() || player.hasMetadata("meditation_interrupted")) {
+                    bossBar.removePlayer(player);
+                    player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "Meditation Ended!");
+                    player.removeMetadata("meditation_interrupted", plugin);
+                    cancel();
+                    return;
+                }
+
                 bossBar.setTitle(ChatColor.GREEN + "Meditation Time: " + timeLeft + "s");
                 bossBar.setProgress((double) timeLeft / meditationTime);
 
-                if (currentHealth < maxHealth) {
-                    double healAmount = Math.min(shards * shardMultiplier, maxHealth - currentHealth);
-                    player.setHealth(currentHealth + healAmount);
-                    player.getWorld().spawnParticle(Particle.HEART, player.getLocation(), 1);
-                }
+                double healAmount = Math.min(shards * shardMultiplier, player.getMaxHealth() - player.getHealth());
+                player.setHealth(player.getHealth() + healAmount);
+                player.getWorld().spawnParticle(Particle.HEART, player.getLocation(), 5);
 
-                if (player.getAbsorptionAmount() < 15) {
-                    double absorptionToAdd = Math.min(15 - player.getAbsorptionAmount(), shards * shardMultiplier);
-                    player.setAbsorptionAmount(player.getAbsorptionAmount() + absorptionToAdd);
-                    player.getWorld().spawnParticle(Particle.HEART, player.getLocation(), 1);
-                }
+                double absorptionToAdd = Math.min(15 - player.getAbsorptionAmount(), shards * shardMultiplier);
+                player.setAbsorptionAmount(player.getAbsorptionAmount() + absorptionToAdd);
 
                 timeLeft--;
-                if (timeLeft <= 0 || player.isDead() || player.hasMetadata("meditation_interrupted")) {
+                if (timeLeft <= 0) {
                     bossBar.removePlayer(player);
-                    player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "Meditation Ended!");
+                    player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "Meditation Completed Successfully!");
                     cancel();
                 }
             }
         }.runTaskTimer(plugin, 0, 20);
+    }
+
+    @EventHandler
+    public void onPlayerMove(PlayerMoveEvent event) {
+        if (!event.getFrom().getBlock().equals(event.getTo().getBlock())) {
+            event.getPlayer().setMetadata("meditation_interrupted", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
+        }
+    }
+
+    @EventHandler
+    public void onPlayerDamage(EntityDamageEvent event) {
+        if (event.getEntity() instanceof Player player) {
+            player.setMetadata("meditation_interrupted", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
+        }
     }
 
     public String displayName() {

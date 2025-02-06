@@ -152,19 +152,26 @@ public class ReviveEvent implements Listener {
     private void startRevivalRitual(Player player, OfflinePlayer target, Block beaconBlock) {
         new BukkitRunnable() {
             int ticks = 0;
-            Location beaconLoc = beaconBlock.getLocation().add(0.5, 0, 0.5); // Center of the block
-            double radius = 5.0; // Radius of the circle
-            double starRadius = 5.0; // Star fits inside the circle
-            double angle = 0; // Rotation angle for both the circle and the star
+            Location beaconLoc = beaconBlock.getLocation().add(0.5, 0, 0.5);
+            double radius = 5.0;
+            double[][] starPoints = {
+                    {0, -5},
+                    {4.76, -1.55},
+                    {2.94, 4.05},
+                    {-2.94, 4.05},
+                    {-4.76, -1.55}
+            };
+
+            int[][] starConnections = {
+                    {0, 2}, {2, 4}, {4, 1}, {1, 3}, {3, 0}
+            };
 
             @Override
             public void run() {
                 if (ticks >= 100) {
-                    // Explosion effect
                     beaconBlock.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, beaconLoc, 1);
                     beaconBlock.getWorld().playSound(beaconLoc, Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 
-                    // Pardon the player
                     Bukkit.getBanList(BanList.Type.NAME).pardon(target.getName());
                     beaconBlock.setType(Material.AIR);
                     placedBeacons.remove(player);
@@ -178,9 +185,9 @@ public class ReviveEvent implements Listener {
                     return;
                 }
 
-                // Drawing the rotating outer circle
-                for (int i = 0; i < 360; i += 5) { // Increment angle for smooth circle
-                    double radians = Math.toRadians(i + angle);
+                // Drawing the outer circle
+                for (int i = 0; i < 360; i += 5) {
+                    double radians = Math.toRadians(i + ticks);
                     double x = radius * Math.cos(radians);
                     double z = radius * Math.sin(radians);
 
@@ -189,18 +196,17 @@ public class ReviveEvent implements Listener {
                             Particle.REDSTONE,
                             particleLoc,
                             0,
-                            new Particle.DustOptions(Color.RED, 1) // Redstone particle effect
+                            new Particle.DustOptions(Color.RED, 1)
                     );
                 }
 
-                // Drawing the rotating star
-                for (int i = 0; i < 5; i++) {
-                    double startAngle = angle + i * 2 * Math.PI / 5; // Position each point of the star
-                    double endAngle = angle + ((i + 2) % 5) * 2 * Math.PI / 5; // Skip one point to create the star shape
+                for (int[] connection : starConnections) {
+                    double[] startPoint = starPoints[connection[0]];
+                    double[] endPoint = starPoints[connection[1]];
 
-                    for (double t = 0; t <= 1; t += 0.05) { // Draw lines between star points
-                        double x = starRadius * Math.cos(startAngle + (endAngle - startAngle) * t);
-                        double z = starRadius * Math.sin(startAngle + (endAngle - startAngle) * t);
+                    for (double t = 0; t <= 1; t += 0.05) {
+                        double x = startPoint[0] + (endPoint[0] - startPoint[0]) * t;
+                        double z = startPoint[1] + (endPoint[1] - startPoint[1]) * t;
 
                         Location particleLoc = beaconLoc.clone().add(x, 0, z);
                         beaconBlock.getWorld().spawnParticle(
@@ -212,7 +218,6 @@ public class ReviveEvent implements Listener {
                     }
                 }
 
-                angle += Math.PI / 60; // Gradually rotate the circle and star together
                 ticks += 3;
             }
         }.runTaskTimer(plugin, 0, 3);
@@ -235,7 +240,8 @@ public class ReviveEvent implements Listener {
                 1.5f
         );
 
-        for (double y = start.getY(); y < maxHeight; y += 0.5) {
+        for (double y = start.getY(); y < maxHeight; y += 1) {
+            y = 365;
             Location beamLoc = start.clone();
             beamLoc.setY(y);
             world.spawnParticle(Particle.DUST_COLOR_TRANSITION, beamLoc, 5, 0.1, 0.1, 0.1, dustTransition);

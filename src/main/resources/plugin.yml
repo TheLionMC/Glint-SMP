@@ -1,7 +1,7 @@
 name: GlintSMP
-version: 2.01
+version: 2.02
 main: me.thelionmc.minecraftplugin.GlintSMP
-api-version: '1.20'
+api-version: '1.21'
 shardLossRadius: 100
 permissions:
   op:
