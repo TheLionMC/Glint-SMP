@@ -32,10 +32,8 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
         super();
         this.plugin = plugin;
         this.mainClass = mainClass;
-        if (plugin != null){
-            plugin.getConfig();
-        }
         this.shardData = plugin.getConfig();
+
         this.cooldownSeconds = 180;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

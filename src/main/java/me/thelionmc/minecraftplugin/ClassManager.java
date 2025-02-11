@@ -25,17 +25,12 @@ public class ClassManager implements Listener {
     public ClassManager(Plugin plugin, GlintSMP mainClass) {
         System.out.println("Initializing ClassManager...");
 
-        this.plugin = plugin != null ? plugin : mainClass;
+        this.plugin = plugin;
+        this.mainClass = mainClass;
 
         if (this.plugin == null) {
             System.out.println("ERROR: Plugin is null! Please check initialization order.");
             return;
-        }
-
-
-
-        if (mainClass != null) {
-            this.mainClass = mainClass;
         }
 
         if (!mainClass.getDataFolder().exists()) {
