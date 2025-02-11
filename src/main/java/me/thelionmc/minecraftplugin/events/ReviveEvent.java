@@ -74,7 +74,11 @@ public class ReviveEvent implements Listener {
     }
 
     public void init(GlintSMP main) {
+        NamespacedKey key = new NamespacedKey(plugin, "ReviveBeacon");
         ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(plugin, "ReviveBeacon"), getReviveBeacon());
+
+        Bukkit.removeRecipe(key);
+
         shapedRecipe.shape("TIT", "INI", "TIT");
         shapedRecipe.setIngredient('N', Material.NETHERITE_BLOCK);
         shapedRecipe.setIngredient('T', Material.TOTEM_OF_UNDYING);
