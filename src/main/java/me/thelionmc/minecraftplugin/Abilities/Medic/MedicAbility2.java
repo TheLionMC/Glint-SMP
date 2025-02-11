@@ -29,7 +29,10 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
     public MedicAbility2(GlintSMP plugin) {
         super();
         this.plugin = plugin;
-        this.shardData = plugin.getConfig() != null ? plugin.getConfig() : new YamlConfiguration();
+        if (plugin != null){
+            plugin.getConfig();
+        }
+        this.shardData = plugin.getConfig();
         this.cooldownSeconds = 180;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

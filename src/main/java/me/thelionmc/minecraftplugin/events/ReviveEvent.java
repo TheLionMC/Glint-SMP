@@ -35,7 +35,7 @@ public class ReviveEvent implements Listener {
     public ReviveEvent(Plugin plugin, GlintSMP main) {
         this.plugin = plugin;
         this.main = main;
-        initReviveBeacon();
+        init();
     }
 
     private void openBanList(Player player) {
@@ -57,23 +57,23 @@ public class ReviveEvent implements Listener {
         ItemMeta cancelMeta = cancel.getItemMeta();
         cancelMeta.setDisplayName(ChatColor.RED + "Cancel");
         cancel.setItemMeta(cancelMeta);
-        banInventory.setItem(banInventory.getSize() - 2, cancel);
+        banInventory.setItem(banInventory.getSize() - 1, cancel);
 
         player.openInventory(banInventory);
     }
 
     public ItemStack getReviveBeacon() {
-        ItemStack beacon = new ItemStack(Material.BEACON);
-        ItemMeta meta = beacon.getItemMeta();
+        ItemStack beacon1 = new ItemStack(Material.BEACON);
+        ItemMeta meta = beacon1.getItemMeta();
         meta.addEnchant(Enchantment.MENDING, 1, true);
         meta.setDisplayName(ChatColor.RED + "Revive Beacon");
         meta.setUnbreakable(true);
-        beacon.setItemMeta(meta);
-        ReviveBeacon = beacon;
-        return beacon;
+        beacon1.setItemMeta(meta);
+        ReviveBeacon = beacon1;
+        return beacon1;
     }
 
-    public void initReviveBeacon() {
+    public void init() {
         ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(plugin, "ReviveBeacon"), getReviveBeacon());
         shapedRecipe.shape("TIT", "INI", "TIT");
         shapedRecipe.setIngredient('N', Material.NETHERITE_BLOCK);

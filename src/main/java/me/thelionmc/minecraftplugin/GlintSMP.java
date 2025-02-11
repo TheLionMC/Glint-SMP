@@ -48,7 +48,6 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.enchantments.Enchantment;
 import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import me.thelionmc.minecraftplugin.PlayerCommands.*;
 import me.thelionmc.minecraftplugin.customItems.CleansingBow;
