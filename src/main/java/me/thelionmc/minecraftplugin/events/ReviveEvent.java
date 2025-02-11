@@ -35,7 +35,7 @@ public class ReviveEvent implements Listener {
     public ReviveEvent(Plugin plugin, GlintSMP main) {
         this.plugin = plugin;
         this.main = main;
-        init();
+        init(main);
     }
 
     private void openBanList(Player player) {
@@ -73,7 +73,7 @@ public class ReviveEvent implements Listener {
         return beacon1;
     }
 
-    public void init() {
+    public void init(GlintSMP main) {
         ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(plugin, "ReviveBeacon"), getReviveBeacon());
         shapedRecipe.shape("TIT", "INI", "TIT");
         shapedRecipe.setIngredient('N', Material.NETHERITE_BLOCK);
