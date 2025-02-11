@@ -103,7 +103,8 @@ public class GlintSMP extends JavaPlugin implements Listener {
         loadClass(() -> dragondeathevent = new Dragondeathevent(this), "Dragondeathevent");
         loadClass(() -> shardLogic = new ShardManager(this, this), "ShardManager");
         loadClass(() -> openstaffMenu = new StaffMenu(this, shardLogic), "StaffMenu");
-        loadClass(() -> classManager = new ClassManager(this, this), "ClassManager");
+        classManager = new ClassManager(this, this);
+        //loadClass(() -> classManager = new ClassManager(this, this), "ClassManager");
         loadClass(() -> abilityManager = new ActionBarManager(this, classManager, this), "ActionBarManager");
         loadClass(() -> keys = new AbilityKeybinds(abilityManager), "AbilityKeybinds");
         loadClass(() -> classCommands = new ClassCommands(classManager), "ClassCommands");
