@@ -20,7 +20,7 @@ public class ClassManager implements Listener {
     private Plugin plugin;
     private GlintSMP mainClass;
     private FileConfiguration classData;
-    Map<String, AbilityGroup> classMap = new HashMap();
+    public Map<String, AbilityGroup> classMap = new HashMap();
 
     public ClassManager(Plugin plugin, GlintSMP mainClass) {
         System.out.println("Initializing ClassManager...");
@@ -61,7 +61,7 @@ public class ClassManager implements Listener {
         classMap.put("Explorer", new Mischief());
         classMap.put("Farmer", new Farmer());
         classMap.put("Hunter", new Warrior());
-        classMap.put("Medic", new Medic(mainClass));
+        classMap.put("Medic", new Medic(plugin, mainClass));
         classMap.put("Miner", new Ninja());
         classMap.put("Angel", new Angel());
         classMap.put("Aqua", new Aqua());

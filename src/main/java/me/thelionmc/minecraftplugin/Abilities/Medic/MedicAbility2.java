@@ -15,6 +15,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.HashMap;
@@ -22,13 +23,15 @@ import java.util.Map;
 import java.util.UUID;
 
 public class MedicAbility2 extends Cooldown implements Ability, Listener {
-    private final GlintSMP plugin;
+    private final Plugin plugin;
+    private final GlintSMP mainClass;
     private final FileConfiguration shardData;
     private final Map<UUID, Long> cools = new HashMap<>();
 
-    public MedicAbility2(GlintSMP plugin) {
+    public MedicAbility2(Plugin plugin, GlintSMP mainClass) {
         super();
         this.plugin = plugin;
+        this.mainClass = mainClass;
         if (plugin != null){
             plugin.getConfig();
         }

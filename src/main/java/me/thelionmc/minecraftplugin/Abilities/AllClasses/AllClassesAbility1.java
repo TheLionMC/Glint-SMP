@@ -13,7 +13,7 @@ public class AllClassesAbility1 extends Cooldown implements Ability {
 
     public AllClassesAbility1() {
         super();
-        this.cooldownSeconds = 10; // Set custom cooldown for Assassin Ability 1
+        this.cooldownSeconds = 10; // Set custom cooldown for Ability 1
     }
 
     public void execute(Player player) {

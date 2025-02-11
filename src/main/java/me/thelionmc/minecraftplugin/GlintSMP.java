@@ -28,6 +28,7 @@ import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility3;
 import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility1;
 import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility2;
 import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility3;
+import me.thelionmc.minecraftplugin.Groups.Angel;
 import me.thelionmc.minecraftplugin.OperatorCommands.*;
 import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.events.Dragondeathevent;
@@ -66,7 +67,6 @@ public class GlintSMP extends JavaPlugin implements Listener {
     private isLegendary isLegendaryClass;
     private KitRules kitRules;
     private ReviveEvent reviveEvent;
-    private SetPhase setPhase;
     private SummonBoss summonBoss;
     private BanList<?> bannedPlayers;
     private Invsee invseecommand;
@@ -77,6 +77,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
     private ClassManager classManager;
     private ActionBarManager actionBarManager;
     private AbilityKeybinds keys;
+    private ClassCommands classCommands;
 
     public void onEnable() {
         saveDefaultConfig();
@@ -94,7 +95,6 @@ public class GlintSMP extends JavaPlugin implements Listener {
         loadClass(() -> brisknessAxe = new BrisknessAxe(this), "BrisknessAxe");
         loadClass(() -> freezingTrident = new FreezingTrident(this), "FreezingTrident");
         loadClass(() -> isLegendaryClass = new isLegendary(cleansingBow, brisknessAxe, freezingTrident), "isLegendary");
-        loadClass(() -> setPhase = new SetPhase(this), "SetPhase");
         loadClass(() -> reviveEvent = new ReviveEvent(this, this), "ReviveEvent");
         loadClass(() -> summonBoss = new SummonBoss(brisknessAxe, this, this), "SummonBoss");
         loadClass(() -> kitRules = new KitRules(this, this), "KitRules");
@@ -106,46 +106,8 @@ public class GlintSMP extends JavaPlugin implements Listener {
         loadClass(() -> classManager = new ClassManager(this, this), "ClassManager");
         loadClass(() -> abilityManager = new ActionBarManager(this, classManager, this), "ActionBarManager");
         loadClass(() -> keys = new AbilityKeybinds(abilityManager), "AbilityKeybinds");
+        loadClass(() -> classCommands = new ClassCommands(classManager), "ClassCommands");
 
-        loadClass(() -> new AllClassesAbility1(), "AllClassesAbility1");
-
-        loadClass(() -> new AngelAbility1(), "AngelAbility1");
-        loadClass(() -> new AngelAbility2(), "AngelAbility2");
-        loadClass(() -> new AngelAbility3(), "AngelAbility3");
-
-        loadClass(() -> new AquaAbility1(), "AquaAbility1");
-        loadClass(() -> new AquaAbility2(), "AquaAbility2");
-        loadClass(() -> new AquaAbility3(), "AquaAbility3");
-
-        loadClass(() -> new AssassinAbility1(), "AssassinAbility1");
-        loadClass(() -> new AssassinAbility2(), "AssassinAbility2");
-        loadClass(() -> new AssassinAbility3(), "AssassinAbility3");
-
-        loadClass(() -> new EscapistAbility1(), "EscapistAbility1");
-        loadClass(() -> new EscapistAbility2(), "EscapistAbility2");
-        loadClass(() -> new EscapistAbility3(), "EscapistAbility3");
-
-        loadClass(() -> new FarmerAbility1(), "FarmerAbility1");
-        loadClass(() -> new FarmerAbility2(), "FarmerAbility2");
-        loadClass(() -> new FarmerAbility3(), "FarmerAbility3");
-
-        loadClass(() -> new MedicAbility1(), "MedicAbility1");
-        loadClass(() -> new MedicAbility2(this), "MedicAbility2");
-        loadClass(() -> new MedicAbility3(), "MedicAbility3");
-
-        loadClass(() -> new MischiefAbility1(), "MischiefAbility1");
-        loadClass(() -> new MischiefAbility2(), "MischiefAbility2");
-        loadClass(() -> new MischiefAbility3(), "MischiefAbility3");
-
-        loadClass(() -> new NinjaAbility1(), "NinjaAbility1");
-        loadClass(() -> new NinjaAbility2(), "NinjaAbility2");
-        loadClass(() -> new NinjaAbility3(), "NinjaAbility3");
-
-        loadClass(() -> new WarriorAbility1(), "WarriorAbility1");
-        loadClass(() -> new WarriorAbility2(), "WarriorAbility2");
-        loadClass(() -> new WarriorAbility3(), "WarriorAbility3");
-
-        setPhase = new SetPhase(this);
         reviveEvent = new ReviveEvent(this, this);
         summonBoss = new SummonBoss(brisknessAxe, this, this);
         kitRules = new KitRules(this, this);
@@ -173,8 +135,6 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CoreProtectTool(this), this);
         getServer().getPluginManager().registerEvents(new Tools(), this);
 
-
-
         getCommand("giveinvisiblearmor").setExecutor(this);
         getCommand("openstaffmenu").setExecutor(openstaffMenu);
         getCommand("giveportalobsidian").setExecutor(new GivePortalObsidian());
@@ -184,19 +144,17 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("start").setExecutor(new Start());
         getCommand("switchability").setExecutor(keys);
         getCommand("useability").setExecutor(keys);
-        getCommand("setphase").setExecutor(setPhase);
-        getCommand("getphase").setExecutor(setPhase);
         getCommand("summonboss").setExecutor(summonBoss);
         getCommand("whitelistall").setExecutor(new WhitelistAll());
         getCommand("invsee").setExecutor(invseecommand);
         getCommand("setshards").setExecutor(shardLogic);
         getCommand("echest").setExecutor(echestseecommand);
         getCommand("gettool").setExecutor(new Tools());
-
-
+        getCommand("setclass").setExecutor(classCommands);
 
         getCommand("gettool").setTabCompleter(new Tools());
         getCommand("summonboss").setTabCompleter(summonBoss);
+        getCommand("setclass").setTabCompleter(classCommands);
         getCommand("withdraw").setTabCompleter(new ShardManager(this, this));
 
 

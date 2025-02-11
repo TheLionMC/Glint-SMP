@@ -12,7 +12,7 @@ public abstract class AbilityGroup {
     private final List<Ability> abilities = new ArrayList<>();
 
     public AbilityGroup() {
-        abilities.add(new AllClassesAbility1()); // ➕ Add here any ability that every player will have
+        //abilities.add(new AllClassesAbility1()); // ➕ Add here any ability that every player will have
         defineAbilities();
     }
 

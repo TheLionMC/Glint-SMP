@@ -197,6 +197,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
             for (int i = 1; i <= 10; i++) {
                 suggestions.add(String.valueOf(i));
             }
+            return suggestions;
         }
         return null;
     }
