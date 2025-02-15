@@ -29,7 +29,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import static me.thelionmc.minecraftplugin.GlintSMP.InvisShards;
+import static me.thelionmc.minecraftplugin.GlintSMP.shards;
 import static me.thelionmc.minecraftplugin.GlintSMP.shardCounts;
 
 public class ShardManager implements Listener, CommandExecutor, TabCompleter {
@@ -95,7 +95,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
         Player player = event.getPlayer();
         this.interactCooldown.put(player.getUniqueId(), System.currentTimeMillis());
         ItemStack handItem = player.getInventory().getItemInMainHand();
-        if (handItem != null && handItem.isSimilar(GlintSMP.InvisShards) && !player.isSneaking()) {
+        if (handItem != null && handItem.isSimilar(GlintSMP.shards) && !player.isSneaking()) {
             if (!player.hasCooldown(Material.NETHER_STAR)) {
                 if (this.getShards(player.getUniqueId()) >= 20) {
                     player.sendMessage(ChatColor.RED + "You cannot have more than 20 Shards.");
@@ -131,7 +131,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
                     if (amount <= 0) {
                         player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "You can't withdraw a negative amount of Invis Shards.");
                     } else if (getShards(player.getUniqueId()) >= amount) {
-                        ItemStack shardItem = InvisShards.clone();
+                        ItemStack shardItem = shards.clone();
                         shardItem.setAmount(amount);
                         HashMap<Integer, ItemStack> remainingItems = player.getInventory().addItem(shardItem);
                         if (!remainingItems.isEmpty()) {

@@ -8,6 +8,9 @@ import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility2;
 import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility3;
 
 public class Aqua extends AbilityGroup {
+    public Aqua() {
+        defineAbilities();
+    }
     @Override
     protected void defineAbilities() {
         addAbility(new AquaAbility1());

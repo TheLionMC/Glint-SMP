@@ -39,9 +39,9 @@ public class ActionBarManager {
                         StringBuilder builder = new StringBuilder(initialString);
 
                         if(ability.onCooldown(player)) {
-                            Long cool = ability.cooldownRemaining(player);
-                            Long minutes = (cool / 1000) / 60;
-                            Long seconds = (cool / 1000) % 60;
+                            long cool = ability.cooldownRemaining(player);
+                            long minutes = (cool / 1000) / 60;
+                            long seconds = (cool / 1000) % 60;
                             builder.append(ChatColor.YELLOW + "" + minutes + "m " + seconds + "s");
                         } else {
                             builder.append(ChatColor.GREEN + "Ready!");

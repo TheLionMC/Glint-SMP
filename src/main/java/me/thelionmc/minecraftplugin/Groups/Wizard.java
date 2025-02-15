@@ -3,6 +3,9 @@ package me.thelionmc.minecraftplugin.Groups;
 import me.thelionmc.minecraftplugin.Abilities.Wizard.*;
 
 public class Wizard extends AbilityGroup {
+    public Wizard() {
+        defineAbilities();
+    }
     @Override
     protected void defineAbilities() {
         addAbility(new WizardAbility1());

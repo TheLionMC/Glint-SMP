@@ -1,34 +1,5 @@
 package me.thelionmc.minecraftplugin;
 
-import me.thelionmc.minecraftplugin.Abilities.AllClasses.AllClassesAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Angel.AngelAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Angel.AngelAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Angel.AngelAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Assassin.AssassinAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Assassin.AssassinAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Assassin.AssassinAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Escapist.EscapistAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Escapist.EscapistAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Escapist.EscapistAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Farmer.FarmerAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Farmer.FarmerAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Farmer.FarmerAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Mischief.MischiefAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Mischief.MischiefAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Mischief.MischiefAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Ninja.NinjaAbility3;
-import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility1;
-import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility2;
-import me.thelionmc.minecraftplugin.Abilities.Warrior.WarriorAbility3;
-import me.thelionmc.minecraftplugin.Groups.Angel;
 import me.thelionmc.minecraftplugin.OperatorCommands.*;
 import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.events.Dragondeathevent;
@@ -70,7 +41,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
     private SummonBoss summonBoss;
     private BanList<?> bannedPlayers;
     private Invsee invseecommand;
-    public static ItemStack InvisShards;
+    public static ItemStack shards;
     private Dragondeathevent dragondeathevent;
     private EchestSee echestseecommand;
     private ActionBarManager abilityManager;
@@ -85,29 +56,11 @@ public class GlintSMP extends JavaPlugin implements Listener {
         playerData = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "players.yml"));
 
         this.bannedPlayers = Bukkit.getBanList(BanList.Type.NAME);
-        initInvisShardItem();
+        initShardItem();
 
         if (shardLogic == null) {
             shardLogic = new ShardManager(this, this);
         }
-
-        loadClass(() -> cleansingBow = new CleansingBow(this), "CleansingBow");
-        loadClass(() -> brisknessAxe = new BrisknessAxe(this), "BrisknessAxe");
-        loadClass(() -> freezingTrident = new FreezingTrident(this), "FreezingTrident");
-        loadClass(() -> isLegendaryClass = new isLegendary(cleansingBow, brisknessAxe, freezingTrident), "isLegendary");
-        loadClass(() -> reviveEvent = new ReviveEvent(this, this), "ReviveEvent");
-        loadClass(() -> summonBoss = new SummonBoss(brisknessAxe, this, this), "SummonBoss");
-        loadClass(() -> kitRules = new KitRules(this, this), "KitRules");
-        loadClass(() -> invseecommand = new Invsee(this, this), "Invsee");
-        loadClass(() -> echestseecommand = new EchestSee(this), "EchestSee");
-        loadClass(() -> dragondeathevent = new Dragondeathevent(this), "Dragondeathevent");
-        loadClass(() -> shardLogic = new ShardManager(this, this), "ShardManager");
-        loadClass(() -> openstaffMenu = new StaffMenu(this, shardLogic), "StaffMenu");
-        classManager = new ClassManager(this, this);
-        //loadClass(() -> classManager = new ClassManager(this, this), "ClassManager");
-        loadClass(() -> abilityManager = new ActionBarManager(this, classManager, this), "ActionBarManager");
-        loadClass(() -> keys = new AbilityKeybinds(abilityManager), "AbilityKeybinds");
-        loadClass(() -> classCommands = new ClassCommands(classManager), "ClassCommands");
 
         reviveEvent = new ReviveEvent(this, this);
         summonBoss = new SummonBoss(brisknessAxe, this, this);
@@ -117,14 +70,11 @@ public class GlintSMP extends JavaPlugin implements Listener {
         dragondeathevent = new Dragondeathevent(this);
         shardLogic = new ShardManager(this, this);
         openstaffMenu = new StaffMenu(this, shardLogic);
-        ClassManager classManager = new ClassManager(this, this);
+        classManager = new ClassManager(this, this);
         abilityManager = new ActionBarManager(this, classManager, this);
         keys = new AbilityKeybinds(abilityManager);
 
         getServer().getPluginManager().registerEvents(this, this);
-        getServer().getPluginManager().registerEvents(cleansingBow, this);
-        getServer().getPluginManager().registerEvents(brisknessAxe, this);
-        getServer().getPluginManager().registerEvents(freezingTrident, this);
         getServer().getPluginManager().registerEvents(openstaffMenu, this);
         getServer().getPluginManager().registerEvents(kitRules, this);
         getServer().getPluginManager().registerEvents(summonBoss, this);
@@ -136,7 +86,6 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(new CoreProtectTool(this), this);
         getServer().getPluginManager().registerEvents(new Tools(), this);
 
-        getCommand("giveinvisiblearmor").setExecutor(this);
         getCommand("openstaffmenu").setExecutor(openstaffMenu);
         getCommand("giveportalobsidian").setExecutor(new GivePortalObsidian());
         getCommand("shardcount").setExecutor(shardLogic);
@@ -166,7 +115,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
     public void onEntityCombust(EntityCombustEvent e) {
         if (e.getEntity() instanceof Item) {
             ItemStack item = ((Item) e.getEntity()).getItemStack();
-            if (item.equals(InvisShards)) {
+            if (item.equals(shards)) {
                 e.setCancelled(true);
             }
         }
@@ -181,45 +130,10 @@ public class GlintSMP extends JavaPlugin implements Listener {
             }
         }
     }
-    private void loadClass(Runnable init, String className) {
-        try {
-            init.run();
-        } catch (Exception e) {
-            StackTraceElement[] stackTrace = e.getStackTrace();
-            String errorMessage = "Failed to load " + className + ": " + e.getMessage();
-
-            if (stackTrace.length > 0) {
-                errorMessage += " at line " + stackTrace[0].getLineNumber();
-            }
-
-            getLogger().severe(errorMessage);
-            e.printStackTrace();
-
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                if (player.isOp()) {
-                    player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + errorMessage);
-                }
-            }
-        }
-    }
-
-    private boolean isAxe(Material material) {
-        switch (material) {
-            case WOODEN_AXE:
-            case STONE_AXE:
-            case IRON_AXE:
-            case GOLDEN_AXE:
-            case DIAMOND_AXE:
-            case NETHERITE_AXE:
-                return true;
-            default:
-                return false;
-        }
-    }
 
     @Override
     public void onDisable() {
-        getConfig().set("Shard", InvisShards);
+        getConfig().set("Shard", shards);
         saveConfig();
         getLogger().info("GlintSMP shut down.");
         shardLogic.saveShardData();
@@ -234,14 +148,14 @@ public class GlintSMP extends JavaPlugin implements Listener {
         }
     }
 
-    public void initInvisShardItem() {
+    public void initShardItem() {
         ItemStack item = new ItemStack(Material.NETHER_STAR, 1);
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.RED + "Shard");
         meta.addEnchant(Enchantment.DURABILITY, 1, false);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         item.setItemMeta(meta);
-        InvisShards = item;
+        shards = item;
 
         ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(this, "Shard"), item);
         shapedRecipe.shape("DND", "NSN", "DND");
@@ -251,7 +165,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         Bukkit.getServer().addRecipe(shapedRecipe);
     }
 
-    public static ItemStack getInvisShardItem() {
-        return InvisShards;
+    public static ItemStack getShardItem() {
+        return shards;
     }
 }

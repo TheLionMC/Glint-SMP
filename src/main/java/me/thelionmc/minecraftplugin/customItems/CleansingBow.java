@@ -135,7 +135,7 @@ public class CleansingBow implements Listener {
     public void init(GlintSMP glintSMP) {
         ShapedRecipe shapedRecipe = new ShapedRecipe(new NamespacedKey(plugin, "CleansingBowRecipe"), TheCleansingBow());
         shapedRecipe.shape(" BI", "B S", " BI");
-        shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(mainClass.getInvisShardItem()));
+        shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(mainClass.getShardItem()));
         shapedRecipe.setIngredient('S', new RecipeChoice.ExactChoice(CleansingShard()));
         shapedRecipe.setIngredient('B', Material.BLAZE_ROD);
         getServer().addRecipe(shapedRecipe);

@@ -24,16 +24,18 @@ import java.util.UUID;
 
 public class MedicAbility2 extends Cooldown implements Ability, Listener {
     private final Plugin plugin;
-    private final GlintSMP mainClass;
-    private final FileConfiguration shardData;
-    private final Map<UUID, Long> cools = new HashMap<>();
+    private GlintSMP mainClass;
+    private FileConfiguration shardData;
+    private Map<UUID, Long> cools = new HashMap<>();
 
     public MedicAbility2(Plugin plugin, GlintSMP mainClass) {
         super();
+
         this.plugin = plugin;
         this.mainClass = mainClass;
-        this.shardData = plugin.getConfig();
 
+        System.out.println(plugin == null ? "a null" : "a non-null");
+        this.shardData = plugin.getConfig();
         this.cooldownSeconds = 180;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }

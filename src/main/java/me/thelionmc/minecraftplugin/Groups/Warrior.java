@@ -3,6 +3,9 @@ package me.thelionmc.minecraftplugin.Groups;
 import me.thelionmc.minecraftplugin.Abilities.Warrior.*;
 
 public class Warrior extends AbilityGroup {
+    public Warrior() {
+        defineAbilities();
+    }
     @Override
     protected void defineAbilities() {
         addAbility(new WarriorAbility1());

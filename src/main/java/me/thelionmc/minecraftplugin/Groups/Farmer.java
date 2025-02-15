@@ -3,6 +3,9 @@ package me.thelionmc.minecraftplugin.Groups;
 import me.thelionmc.minecraftplugin.Abilities.Farmer.*;
 
 public class Farmer extends AbilityGroup {
+    public Farmer() {
+        defineAbilities();
+    }
     @Override
     protected void defineAbilities() {
         addAbility(new FarmerAbility1());

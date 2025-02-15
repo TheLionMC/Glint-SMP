@@ -9,11 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class AbilityGroup {
-    private final List<Ability> abilities = new ArrayList<>();
+    private List<Ability> abilities = new ArrayList<>();
 
     public AbilityGroup() {
         //abilities.add(new AllClassesAbility1()); // ➕ Add here any ability that every player will have
-        defineAbilities();
     }
 
     protected abstract void defineAbilities();

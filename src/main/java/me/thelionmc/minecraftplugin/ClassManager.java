@@ -8,6 +8,7 @@ import java.util.Random;
 import java.util.UUID;
 
 import me.thelionmc.minecraftplugin.Groups.*;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -25,13 +26,8 @@ public class ClassManager implements Listener {
     public ClassManager(Plugin plugin, GlintSMP mainClass) {
         System.out.println("Initializing ClassManager...");
 
-        this.plugin = plugin;
         this.mainClass = mainClass;
-
-        if (this.plugin == null) {
-            System.out.println("ERROR: Plugin is null! Please check initialization order.");
-            return;
-        }
+        this.plugin = plugin;
 
         if (!mainClass.getDataFolder().exists()) {
             mainClass.getDataFolder().mkdirs();
@@ -51,18 +47,25 @@ public class ClassManager implements Listener {
         // Load the classData.yml configuration
         this.classData = YamlConfiguration.loadConfiguration(classDataFile);
 
+        populateClassMap();
+
         // Initialize the class map
+
+
+        System.out.println("ClassManager initialized with plugin: " + (plugin != null ? "Initialized" : "Null"));
+    }
+
+    private void populateClassMap() {
         classMap.put("Assassin", new Assassin());
         classMap.put("Explorer", new Mischief());
         classMap.put("Farmer", new Farmer());
         classMap.put("Hunter", new Warrior());
+        System.out.println(plugin == null ? "a null" : "a non-null");
         classMap.put("Medic", new Medic(plugin, mainClass));
         classMap.put("Miner", new Ninja());
         classMap.put("Angel", new Angel());
         classMap.put("Aqua", new Aqua());
         classMap.put("Wizard", new Wizard());
-
-        System.out.println("ClassManager initialized with plugin: " + (plugin != null ? "Initialized" : "Null"));
     }
 
     public void saveClassData() {

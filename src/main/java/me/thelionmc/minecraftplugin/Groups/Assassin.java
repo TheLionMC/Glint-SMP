@@ -3,6 +3,9 @@ package me.thelionmc.minecraftplugin.Groups;
 import me.thelionmc.minecraftplugin.Abilities.Assassin.*;
 
 public class Assassin extends AbilityGroup {
+    public Assassin() {
+        defineAbilities();
+    }
     protected void defineAbilities() {
         addAbility(new AssassinAbility1());
         addAbility(new AssassinAbility2());

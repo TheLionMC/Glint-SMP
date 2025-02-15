@@ -7,18 +7,21 @@ import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.plugin.Plugin;
 
 public class Medic extends AbilityGroup {
-    private final GlintSMP mainclass;
+    private final GlintSMP mainClass;
     private final Plugin plugin;
 
     public Medic(Plugin plugin, GlintSMP mainClass) {
-        this.mainclass = mainClass;
+        this.mainClass = mainClass;
         this.plugin = plugin;
+
+        defineAbilities();
     }
 
     @Override
     protected void defineAbilities() {
         addAbility(new MedicAbility1());
-        addAbility(new MedicAbility2(plugin, mainclass));
+        if(plugin == null) throw new IllegalArgumentException();
+        addAbility(new MedicAbility2(plugin, mainClass));
         addAbility(new MedicAbility3());
     }
 }
