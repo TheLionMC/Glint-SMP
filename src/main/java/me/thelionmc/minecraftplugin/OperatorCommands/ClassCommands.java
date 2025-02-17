@@ -49,7 +49,7 @@ public class ClassCommands implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender commandSender, Command command, String s, String[] args) {
-        if (command.getName().equalsIgnoreCase("withdraw") && args.length == 2) {
+        if (command.getName().equalsIgnoreCase("setclass") && args.length == 2) {
             ArrayList<String> list = new ArrayList<>();
             list.addAll(classManager.classMap.keySet());
             return list;

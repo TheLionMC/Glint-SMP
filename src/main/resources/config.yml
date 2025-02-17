@@ -2,5 +2,5 @@ shardLossRadius: 100
 message:
   welcome: "Welcome to the server!"
   goodbye: "Goodbye!"
-noise: ITEM_SHIELD_BREAK
+noise: ENTITY_ITEM_BREAK
 # UNLESS YOU ARE A DEVELOPER DO NOT REPLACE THIS

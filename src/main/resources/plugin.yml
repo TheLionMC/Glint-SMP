@@ -1,5 +1,5 @@
 name: GlintSMP
-version: 2.1.0
+version: 2.1.1
 main: me.thelionmc.minecraftplugin.GlintSMP
 api-version: '1.21'
 shardLossRadius: 100
@@ -74,4 +74,6 @@ commands:
     description: Allows you to set a specific player's class.
     usage: /setclass [playerName] [className]
     permission: op
-
+  setcooldown:
+    description: Allows you to change / set the cooldown of any class
+    usage: /setcooldown [Ability] [NewTimeinSeconds]

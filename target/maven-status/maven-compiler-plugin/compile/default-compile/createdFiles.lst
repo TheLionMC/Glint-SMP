@@ -2,7 +2,6 @@ me\thelionmc\minecraftplugin\OperatorCommands\SummonBoss$6.class
 me\thelionmc\minecraftplugin\Abilities\Ninja\NinjaAbility1.class
 me\thelionmc\minecraftplugin\OperatorCommands\Start.class
 me\thelionmc\minecraftplugin\Abilities\Medic\MedicAbility2.class
-me\thelionmc\minecraftplugin\GlintSMP$1.class
 me\thelionmc\minecraftplugin\Abilities\Warrior\WarriorAbility3.class
 me\thelionmc\minecraftplugin\Abilities\Wizard\WizardAbility2.class
 me\thelionmc\minecraftplugin\Abilities\Escapist\EscapistAbility3.class
@@ -27,14 +26,15 @@ me\thelionmc\minecraftplugin\OperatorCommands\SummonBoss$8.class
 me\thelionmc\minecraftplugin\Abilities\Mischief\MischiefAbility1.class
 me\thelionmc\minecraftplugin\customItems\BrisknessAxe.class
 me\thelionmc\minecraftplugin\OperatorCommands\SummonBoss.class
+me\thelionmc\minecraftplugin\TrustManager.class
 me\thelionmc\minecraftplugin\Abilities\Farmer\FarmerAbility3.class
 me\thelionmc\minecraftplugin\Groups\AbilityGroup.class
-me\thelionmc\minecraftplugin\OperatorCommands\SetPhase.class
 me\thelionmc\minecraftplugin\Abilities\Angel\AngelAbility2.class
 me\thelionmc\minecraftplugin\Abilities\Angel\AngelAbility1.class
 me\thelionmc\minecraftplugin\OperatorCommands\SummonBoss$7.class
 me\thelionmc\minecraftplugin\KitRules$1.class
 me\thelionmc\minecraftplugin\OperatorCommands\PVP.class
+me\thelionmc\minecraftplugin\customItems\Shard.class
 me\thelionmc\minecraftplugin\ShardManager.class
 me\thelionmc\minecraftplugin\Abilities\Cooldown.class
 me\thelionmc\minecraftplugin\customItems\CleansingBow$2.class
@@ -59,6 +59,7 @@ me\thelionmc\minecraftplugin\Abilities\Medic\MedicAbility1.class
 me\thelionmc\minecraftplugin\Abilities\Assassin\AssassinAbility3.class
 me\thelionmc\minecraftplugin\Abilities\AllClasses\AllClassesAbility1.class
 me\thelionmc\minecraftplugin\OperatorCommands\CustomItems.class
+me\thelionmc\minecraftplugin\OperatorCommands\ClassCommands.class
 me\thelionmc\minecraftplugin\Tools\data\ProtectedArea.class
 me\thelionmc\minecraftplugin\Abilities\Escapist\EscapistAbility2.class
 me\thelionmc\minecraftplugin\Abilities\Mischief\MischiefAbility2.class
@@ -66,6 +67,7 @@ me\thelionmc\minecraftplugin\Abilities\Ninja\NinjaAbility3.class
 me\thelionmc\minecraftplugin\Abilities\Angel\AngelAbility3.class
 me\thelionmc\minecraftplugin\OperatorCommands\StaffMenu.class
 me\thelionmc\minecraftplugin\Groups\Medic.class
+me\thelionmc\minecraftplugin\OperatorCommands\SetCooldown.class
 me\thelionmc\minecraftplugin\customItems\CleansingBow.class
 me\thelionmc\minecraftplugin\Abilities\Warrior\WarriorAbility2.class
 me\thelionmc\minecraftplugin\Abilities\Wizard\WizardAbility3.class

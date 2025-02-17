@@ -17,24 +17,27 @@ public class PVP implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("true")) {
                     playerWorld.setPVP(true);
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendTitle(ChatColor.RED + "PVP ENABLED", ChatColor.WHITE + "Be careful out there...");
-                        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
-                        p.sendMessage("----------------------------------------------------");
-                        p.sendMessage("");
-                        p.sendMessage(ChatColor.BLUE + "       [Glint SMP] " + ChatColor.GREEN + "Server Enabled PvP");
-                        p.sendMessage("");
-                        p.sendMessage("----------------------------------------------------");
+                      //  p.sendTitle(ChatColor.RED + "PVP ENABLED", ChatColor.WHITE + "Be careful out there...");
+                        //p.getWorld().playSound(p.getLocation(), Sound.ENTITY_ENDER_DRAGON_GROWL, 1, 1);
+                        //p.sendMessage("----------------------------------------------------");
+                        //p.sendMessage("");
+                        //p.sendMessage(ChatColor.BLUE + "       [Glint SMP] " + ChatColor.GREEN + "Server Enabled PvP");
+                        //p.sendMessage("");
+                        //p.sendMessage("----------------------------------------------------");
+
+                        p.sendTitle(ChatColor.RED + "PvP Enabled", ChatColor.YELLOW + "You may now kill other players!");
                     }
                 } else if (args[0].equalsIgnoreCase("false")) {
                     playerWorld.setPVP(false);
                     for (Player p : Bukkit.getOnlinePlayers()) {
-                        p.sendTitle(ChatColor.GREEN + "PVP DISABLED", ChatColor.WHITE + "Relax... while you can...");
-                        p.getWorld().playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
-                        p.sendMessage("----------------------------------------------------");
-                        p.sendMessage("");
-                        p.sendMessage(ChatColor.BLUE + "       [Glint SMP] " + ChatColor.GREEN +  "Server Disabled PvP");
-                        p.sendMessage("");
-                        p.sendMessage("----------------------------------------------------");
+                      //  p.sendTitle(ChatColor.GREEN + "PVP DISABLED", ChatColor.WHITE + "Relax... while you can...");
+                       // p.getWorld().playSound(p.getLocation(), Sound.ENTITY_VILLAGER_NO, 1, 1);
+                        //p.sendMessage("----------------------------------------------------");
+                        //p.sendMessage("");
+                        //p.sendMessage(ChatColor.BLUE + "       [Glint SMP] " + ChatColor.GREEN +  "Server Disabled PvP");
+                        //p.sendMessage("");
+                        //p.sendMessage("----------------------------------------------------");
+                        p.sendTitle(ChatColor.GREEN + "PvP Disabled", ChatColor.YELLOW + "You are save, for now...");
                         return true;
                     }
                 } else {

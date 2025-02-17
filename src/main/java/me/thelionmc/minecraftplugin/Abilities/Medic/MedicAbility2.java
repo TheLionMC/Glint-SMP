@@ -9,7 +9,6 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.ChatColor;
 import org.bukkit.Particle;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,6 +16,8 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.metadata.FixedMetadataValue;
+import org.bukkit.Location;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,19 +25,20 @@ import java.util.UUID;
 
 public class MedicAbility2 extends Cooldown implements Ability, Listener {
     private final Plugin plugin;
-    private GlintSMP mainClass;
-    private FileConfiguration shardData;
-    private Map<UUID, Long> cools = new HashMap<>();
+    private final GlintSMP mainClass;
+    private final FileConfiguration shardData;
+    private final Map<UUID, Long> cools = new HashMap<>();
+    private final Map<UUID, Location> meditationStartLocations = new HashMap<>();
+    private final Set<UUID> interrupted = new HashSet<>();
+    private final Set<UUID> isMeditating = new HashSet<>();
 
     public MedicAbility2(Plugin plugin, GlintSMP mainClass) {
         super();
-
         this.plugin = plugin;
         this.mainClass = mainClass;
-
-        System.out.println(plugin == null ? "a null" : "a non-null");
         this.shardData = plugin.getConfig();
-        this.cooldownSeconds = 180;
+
+        this.cooldownSeconds = 5;
         plugin.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
@@ -45,8 +47,7 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
     }
 
     public void execute(Player player) {
-
-        player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "You have started meditating. Do not move or take damage!");
+        player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "You have started meditating. Do not move more than half a block or take damage!");
 
         int shards = getShards(player.getUniqueId());
         int meditationTime = Math.min(30, Math.max(10, shards));
@@ -60,15 +61,20 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
         bossBar.setProgress(1.0);
         bossBar.addPlayer(player);
 
+        meditationStartLocations.put(player.getUniqueId(), player.getLocation());
+
+        isMeditating.add(player.getUniqueId());
         new BukkitRunnable() {
             int timeLeft = meditationTime;
+            double angle = 0;
 
             @Override
             public void run() {
-                if (player.isDead() || player.hasMetadata("meditation_interrupted")) {
+                if (player.isDead() || interrupted.contains(player.getUniqueId())) {
                     bossBar.removePlayer(player);
                     player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "Meditation Ended!");
-                    player.removeMetadata("meditation_interrupted", plugin);
+                    meditationStartLocations.remove(player.getUniqueId());
+                    isMeditating.remove(player.getUniqueId());
                     cancel();
                     return;
                 }
@@ -76,17 +82,28 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
                 bossBar.setTitle(ChatColor.GREEN + "Meditation Time: " + timeLeft + "s");
                 bossBar.setProgress((double) timeLeft / meditationTime);
 
-                double healAmount = Math.min(shards * shardMultiplier, player.getMaxHealth() - player.getHealth());
-                player.setHealth(player.getHealth() + healAmount);
-                player.getWorld().spawnParticle(Particle.HEART, player.getLocation(), 5);
+                if (player.getHealth() == player.getMaxHealth()) {
+                    if (player.getAbsorptionAmount() < 15) {
+                        player.setAbsorptionAmount(player.getAbsorptionAmount() + 2);
+                    }
+                } else {
+                    player.setHealth(player.getHealth() + 2);
+                }
 
-                double absorptionToAdd = Math.min(15 - player.getAbsorptionAmount(), shards * shardMultiplier);
-                player.setAbsorptionAmount(player.getAbsorptionAmount() + absorptionToAdd);
+                for (int i = 0; i < 8; i++) {
+                    double x = Math.cos(angle + (i * Math.PI / 4)) * 1;
+                    double z = Math.sin(angle + (i * Math.PI / 4)) * 1;
+                    Location particleLoc = player.getLocation().clone().add(x, 1, z);
+                    player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, particleLoc, 1, 0, 0, 0, 0);
+                }
+                angle += Math.PI / 16;
 
                 timeLeft--;
                 if (timeLeft <= 0) {
                     bossBar.removePlayer(player);
                     player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "Meditation Completed Successfully!");
+                    meditationStartLocations.remove(player.getUniqueId());
+                    isMeditating.remove(player.getUniqueId());
                     cancel();
                 }
             }
@@ -95,19 +112,23 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
 
     @EventHandler
     public void onPlayerMove(PlayerMoveEvent event) {
-        if (!event.getFrom().getBlock().equals(event.getTo().getBlock())) {
-            event.getPlayer().setMetadata("meditation_interrupted", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
+        Player player = event.getPlayer();
+        if(isMeditating.contains(player.getUniqueId())) {
+            Location startLocation = meditationStartLocations.get(player.getUniqueId());
+            if (startLocation != null && Objects.requireNonNull(event.getTo()).distance(startLocation) > 1) {
+                interrupted.add(player.getUniqueId());
+            }
         }
     }
 
     @EventHandler
     public void onPlayerDamage(EntityDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
-            player.setMetadata("meditation_interrupted", new org.bukkit.metadata.FixedMetadataValue(plugin, true));
+            interrupted.add(player.getUniqueId());
         }
     }
 
     public String displayName() {
-        return "Ability 2 Medic Class";
+        return "Meditation";
     }
 }

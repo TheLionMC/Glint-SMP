@@ -51,19 +51,15 @@ public class GlintSMP extends JavaPlugin implements Listener {
     private ClassCommands classCommands;
 
     public void onEnable() {
-        saveDefaultConfig();
-
-        playerData = YamlConfiguration.loadConfiguration(new File(getDataFolder(), "players.yml"));
-
-        this.bannedPlayers = Bukkit.getBanList(BanList.Type.NAME);
-        initShardItem();
+        shard = new Shard();
+        shard.initialize(this);
 
         if (shardLogic == null) {
             shardLogic = new ShardManager(this, this);
         }
 
         reviveEvent = new ReviveEvent(this, this);
-        summonBoss = new SummonBoss(brisknessAxe, this, this);
+        summonBoss = new SummonBoss(this, this);
         kitRules = new KitRules(this, this);
         invseecommand = new Invsee(this, this);
         echestseecommand = new EchestSee(this);
@@ -73,6 +69,9 @@ public class GlintSMP extends JavaPlugin implements Listener {
         classManager = new ClassManager(this, this);
         abilityManager = new ActionBarManager(this, classManager, this);
         keys = new AbilityKeybinds(abilityManager);
+        classCommands = new ClassCommands(classManager);
+        resetcooldown = new SetCooldown(classManager);
+        trustManager = new TrustManager(this);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(openstaffMenu, this);
@@ -126,7 +125,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
             Player player = (Player)event.getEntity();
             Player damager = (Player)event.getDamager();
             if (damager.getEquipment().getItemInMainHand().getType().toString().toLowerCase().contains("axe") && player.isBlocking() && (int)event.getFinalDamage() == 0) {
-                damager.playSound(damager.getLocation(), Sound.ITEM_SHIELD_BREAK, 5.0F, 5.0F);
+                damager.playSound(damager.getLocation(), Sound.ENTITY_ITEM_BREAK, 5.0F, 1.0F);
             }
         }
     }

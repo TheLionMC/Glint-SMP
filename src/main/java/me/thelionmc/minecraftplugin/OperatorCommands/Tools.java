@@ -250,8 +250,9 @@ public class Tools implements CommandExecutor, TabCompleter, Listener {
         if(item.equals(Material.NETHERITE_AXE) || item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Ban Hammer")) {
             banvictim.kickPlayer(ChatColor.RED + "You have been struck by the ban hammer!");
             banList.addBan(banvictim.getName(), reason, (Date)null, banvictim.getName());
-        } else if (item.equals(Material.WOODEN_SWORD) || item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "One Shot Sword"));
-        banvictim.setHealth(0);
+        } else if (item.equals(Material.WOODEN_SWORD) || item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "One Shot Sword")) {
+            banvictim.setHealth(0);
+        }
     }
     private void giveOneShotSword(Player player) {
         ItemStack sword = new ItemStack(Material.WOODEN_SWORD);
