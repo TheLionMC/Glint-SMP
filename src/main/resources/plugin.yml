@@ -1,5 +1,5 @@
 name: GlintSMP
-version: 2.1.1
+version: 2.1.2
 main: me.thelionmc.minecraftplugin.GlintSMP
 api-version: '1.21'
 shardLossRadius: 100
@@ -77,3 +77,10 @@ commands:
   setcooldown:
     description: Allows you to change / set the cooldown of any class
     usage: /setcooldown [Ability] [NewTimeinSeconds]
+  trust:
+    description: Allows you to trust a player making your abilities not affect the player
+    usage: /trust [playerName]
+  distrust:
+    description: Allows you to distrust a player making your abilities affect the player again
+    usage: /distrust [playerName]
+

@@ -8,12 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+
+import net.md_5.bungee.api.ChatColor;
 import org.bukkit.BanList;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import org.bukkit.BanList.Type;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.BanList.Type;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -29,12 +30,12 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
-import static me.thelionmc.minecraftplugin.GlintSMP.shards;
+
 import static me.thelionmc.minecraftplugin.GlintSMP.shardCounts;
 
 public class ShardManager implements Listener, CommandExecutor, TabCompleter {
-    private FileConfiguration shardData;
-    private Plugin plugin;
+    final private FileConfiguration shardData;
+    final private Plugin plugin;
     private GlintSMP mainClass;
     private Map<UUID, Long> interactCooldown = new HashMap<>();
 
@@ -95,7 +96,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
         Player player = event.getPlayer();
         this.interactCooldown.put(player.getUniqueId(), System.currentTimeMillis());
         ItemStack handItem = player.getInventory().getItemInMainHand();
-        if (handItem != null && handItem.isSimilar(GlintSMP.shards) && !player.isSneaking()) {
+        if (handItem != null && handItem.isSimilar(GlintSMP.shard) && !player.isSneaking()) {
             if (!player.hasCooldown(Material.NETHER_STAR)) {
                 if (this.getShards(player.getUniqueId()) >= 20) {
                     player.sendMessage(ChatColor.RED + "You cannot have more than 20 Shards.");
@@ -110,6 +111,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
                     int newAmount = handItem.getAmount() - 1;
                     if (newAmount <= 0) {
                         player.getInventory().setItemInMainHand((ItemStack)null);
+
                     } else {
                         handItem.setAmount(newAmount);
                         player.getInventory().setItemInMainHand(handItem);
@@ -131,9 +133,8 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
                     if (amount <= 0) {
                         player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "You can't withdraw a negative amount of Invis Shards.");
                     } else if (getShards(player.getUniqueId()) >= amount) {
-                        ItemStack shardItem = shards.clone();
-                        shardItem.setAmount(amount);
-                        HashMap<Integer, ItemStack> remainingItems = player.getInventory().addItem(shardItem);
+                        mainClass.shard.setAmount(amount);
+                        HashMap<Integer, ItemStack> remainingItems = player.getInventory().addItem(mainClass.shard);
                         if (!remainingItems.isEmpty()) {
                             for (ItemStack item : remainingItems.values()) {
                                 player.getWorld().dropItemNaturally(player.getLocation(), item);
@@ -173,11 +174,13 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
                     }
                 } else {
                     sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.RED + "Usage: /setShards <playerName> <amount>");
+
                 }
             } else if (cmd.getName().equalsIgnoreCase("shardcount") && sender instanceof Player) {
             if (args.length == 0) {
                 UUID playeruuid = ((Player) sender).getUniqueId();
                 sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "You have " + getShards(playeruuid) + " Shards" );
+                return true;
             }
         }
 

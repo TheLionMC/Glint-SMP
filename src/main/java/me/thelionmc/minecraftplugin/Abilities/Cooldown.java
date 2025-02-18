@@ -33,6 +33,12 @@ public abstract class Cooldown {
         }
     }
 
+    public void setCooldownSeconds(UUID uuid, Long time) {
+        cools.put(uuid, time);
+    }
+
+    public int getDefaultCooldownSeconds() { return cooldownSeconds; }
+
     public abstract void execute(Player player);
 
     public abstract String displayName();

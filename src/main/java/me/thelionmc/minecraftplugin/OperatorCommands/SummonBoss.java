@@ -27,13 +27,11 @@ import org.bukkit.util.Vector;
 import java.util.*;
 
 public class SummonBoss implements CommandExecutor, Listener, TabCompleter {
-    BrisknessAxe brisknessAxe;
     private GlintSMP main;
     private Plugin plugin;
     private final List<String> bosses = Arrays.asList("CleansingWarden", "StaffWither", "DesertDweller");
 
-    public SummonBoss(BrisknessAxe a, GlintSMP main, Plugin plugin) {
-        brisknessAxe = a;
+    public SummonBoss(GlintSMP main, Plugin plugin) {
         this.plugin = plugin;
         this.main = main;
     }

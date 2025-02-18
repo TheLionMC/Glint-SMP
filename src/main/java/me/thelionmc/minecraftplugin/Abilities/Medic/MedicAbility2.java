@@ -19,9 +19,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.metadata.FixedMetadataValue;
 import org.bukkit.Location;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class MedicAbility2 extends Cooldown implements Ability, Listener {
     private final Plugin plugin;
@@ -87,7 +85,7 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
                         player.setAbsorptionAmount(player.getAbsorptionAmount() + 2);
                     }
                 } else {
-                    player.setHealth(player.getHealth() + 2);
+                    player.setHealth(Math.min(player.getMaxHealth(), player.getHealth() + 2));
                 }
 
                 for (int i = 0; i < 8; i++) {
@@ -108,6 +106,7 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
                 }
             }
         }.runTaskTimer(plugin, 0, 20);
+        interrupted.remove(player.getUniqueId());
     }
 
     @EventHandler

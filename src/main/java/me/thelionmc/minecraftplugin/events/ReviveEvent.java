@@ -23,8 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import static me.thelionmc.minecraftplugin.GlintSMP.shards;
-
 public class ReviveEvent implements Listener {
 
     private GlintSMP main;
@@ -82,7 +80,7 @@ public class ReviveEvent implements Listener {
         shapedRecipe.shape("TIT", "INI", "TIT");
         shapedRecipe.setIngredient('N', Material.NETHERITE_BLOCK);
         shapedRecipe.setIngredient('T', Material.TOTEM_OF_UNDYING);
-        shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(shards));
+        shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(main.shard));
         Bukkit.getServer().addRecipe(shapedRecipe);
     }
 

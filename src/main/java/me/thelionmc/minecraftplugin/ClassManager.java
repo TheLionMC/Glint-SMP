@@ -50,17 +50,13 @@ public class ClassManager implements Listener {
         populateClassMap();
 
         // Initialize the class map
-
-
-        System.out.println("ClassManager initialized with plugin: " + (plugin != null ? "Initialized" : "Null"));
     }
 
     private void populateClassMap() {
         classMap.put("Assassin", new Assassin());
-        classMap.put("Explorer", new Mischief());
+        classMap.put("Mischief", new Mischief());
         classMap.put("Farmer", new Farmer());
-        classMap.put("Hunter", new Warrior());
-        System.out.println(plugin == null ? "a null" : "a non-null");
+        classMap.put("Warrior", new Warrior());
         classMap.put("Medic", new Medic(plugin, mainClass));
         classMap.put("Miner", new Ninja());
         classMap.put("Angel", new Angel());
@@ -84,6 +80,8 @@ public class ClassManager implements Listener {
     public String getPlayerClass(UUID playerID) {
         return this.classData.getString(playerID.toString());
     }
+
+    public AbilityGroup getPlayerGroup(UUID playerID) { return classMap.get(getPlayerClass(playerID)); }
 
     public String randomClass() {
         Random random = new Random();

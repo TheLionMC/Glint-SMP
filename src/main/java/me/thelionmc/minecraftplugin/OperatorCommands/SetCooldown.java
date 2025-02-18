@@ -3,7 +3,6 @@ package me.thelionmc.minecraftplugin.OperatorCommands;
 import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.ClassManager;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -51,7 +50,7 @@ public class SetCooldown implements CommandExecutor {
                 return true;
             }
 
-            Ability selectedAbility = classManager.getPlayerGroup(player.getUniqueId()).getAbilities().get(index + 1);
+            Ability selectedAbility = classManager.getPlayerGroup(player.getUniqueId()).getAbilities().get(index - 1);
 
             if(!args[2].matches("\\d{2}:\\d{2}")) {
                 sender.sendMessage("Invalid time: Invalid format (mm:ss)");

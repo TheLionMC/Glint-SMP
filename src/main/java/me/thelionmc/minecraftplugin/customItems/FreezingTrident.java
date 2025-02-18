@@ -116,7 +116,7 @@ public class FreezingTrident implements Listener {
         shapedRecipe.shape(" S ", "ITI", " I ");
         shapedRecipe.setIngredient('T', Material.TRIDENT);
         shapedRecipe.setIngredient('S', new RecipeChoice.ExactChoice(FreezingShard()));
-        shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(mainClass.getShardItem()));
+        shapedRecipe.setIngredient('I', new RecipeChoice.ExactChoice(mainClass.shard));
         getServer().addRecipe(shapedRecipe);
     }
 
