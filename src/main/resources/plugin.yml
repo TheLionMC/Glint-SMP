@@ -1,5 +1,5 @@
 name: GlintSMP
-version: 2.1.3
+version: 2.1.5
 main: me.thelionmc.minecraftplugin.GlintSMP
 api-version: '1.21'
 shardLossRadius: 100

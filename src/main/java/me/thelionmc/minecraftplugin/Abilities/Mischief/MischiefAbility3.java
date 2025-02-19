@@ -5,10 +5,12 @@ import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.wrappers.*;
+import com.mojang.authlib.GameProfile;
 import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.Abilities.Cooldown;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -18,7 +20,10 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+import com.mojang.authlib.properties.Property;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -96,7 +101,8 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
         private final String name;
         private Location location;
         private final WrappedGameProfile gameProfile;
-        private int ping;
+        private final int ping;
+        private final Player player;
 
         public FakePlayer(String name, Location location, Player player, int ping) {
             this.name = name;
@@ -105,8 +111,15 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
             this.uuid = UUID.randomUUID();
             this.gameProfile = new WrappedGameProfile(uuid, name);
             this.ping = ping;
+            this.player = player;
 
-            gameProfile.getProperties().put("textures", (WrappedSignedProperty) getSkinProperty(player));
+            GameProfile playerProfile = getGameProfile(player);
+
+            if (playerProfile != null) {
+                for (Property property : playerProfile.getProperties().get("textures")) {
+                    gameProfile.getProperties().put("textures", WrappedSignedProperty.fromHandle(new Property("textures", property.value(), property.signature())));
+                }
+            }
         }
 
         public Location getLocation() {
@@ -114,7 +127,6 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
         }
 
         public void spawn() {
-            // 1. Send PLAYER_INFO ADD_PLAYER packet
             PacketContainer playerInfoAdd = protocolManager.createPacket(PacketType.Play.Server.PLAYER_INFO);
             playerInfoAdd.getPlayerInfoAction().write(0, EnumWrappers.PlayerInfoAction.ADD_PLAYER);
             List<PlayerInfoData> infoData = new ArrayList<>();
@@ -123,26 +135,16 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
             playerInfoAdd.getPlayerInfoDataLists().write(0, infoData);
             protocolManager.broadcastServerPacket(playerInfoAdd);
 
-            // 2. Send NAMED_ENTITY_SPAWN packet
             PacketContainer spawnPacket = protocolManager.createPacket(PacketType.Play.Server.SPAWN_ENTITY);
             spawnPacket.getIntegers().write(0, entityId);
             spawnPacket.getUUIDs().write(0, uuid);
             spawnPacket.getDoubles().write(0, location.getX());
             spawnPacket.getDoubles().write(1, location.getY());
             spawnPacket.getDoubles().write(2, location.getZ());
-            spawnPacket.getBytes().write(0, (byte) (location.getPitch() * 256 / 360));
-            spawnPacket.getBytes().write(1, (byte) (location.getYaw() * 256 / 360));
+            spawnPacket.getBytes().write(0, (byte) ((int) location.getPitch() * 256.0F / 360.0F));
+            spawnPacket.getBytes().write(1, (byte) ((int) location.getYaw() * 256.0F / 360.0F));
             protocolManager.broadcastServerPacket(spawnPacket);
-
-            // 3. Send ENTITY_METADATA packet to set health (30.0 = 15 hearts) and other properties
-            PacketContainer metaPacket = protocolManager.createPacket(PacketType.Play.Server.ENTITY_METADATA);
-            metaPacket.getIntegers().write(0, entityId); // used to be getModifier() instead of getIntegers()
-            WrappedDataWatcher watcher = new WrappedDataWatcher();
-            watcher.setObject(6, 20.0f);
-            metaPacket.getWatchableCollectionModifier().write(0, watcher.getWatchableObjects());
-            protocolManager.broadcastServerPacket(metaPacket);
         }
-
 
         public void teleport(Location newLocation) {
             this.location = newLocation;
@@ -171,16 +173,6 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
         }
     }
 
-    public com.comphenix.protocol.wrappers.WrappedSignedProperty getSkinProperty(Player player) {
-        GameProfile profile = ((CraftPlayer) player).getHandle().getProfile();  // Getting the profile
-        for (WrappedSignProperty property : WrappedGameProfile.fromGameProfile(profile).getProperties().values()) {
-            if (property.getName().equals("textures")) {
-                return property;  // Return the texture property (skin data)
-            }
-        }
-        return null;
-    }
-
     @EventHandler
     public void onPlayerHit(EntityDamageByEntityEvent event) {
         if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
@@ -188,5 +180,18 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
             Player victim = (Player) event.getEntity();
             lastHitPlayer.put(attacker.getUniqueId(), victim.getUniqueId());
         }
+    }
+
+    private static GameProfile getGameProfile(Player player) {
+        try {
+            Object entityPlayer = player.getClass().getMethod("getHandle").invoke(player);
+            Field profileField = entityPlayer.getClass().getSuperclass().getDeclaredField("bH");
+            profileField.setAccessible(true);
+            return (GameProfile) profileField.get(entityPlayer);
+        } catch (Exception e) {
+            e.printStackTrace();
+            player.sendMessage("ERROR!");
+        }
+        return null;
     }
 }
