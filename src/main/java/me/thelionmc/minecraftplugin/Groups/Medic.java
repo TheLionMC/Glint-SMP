@@ -24,4 +24,6 @@ public class Medic extends AbilityGroup {
         addAbility(new MedicAbility2(plugin, mainClass));
         addAbility(new MedicAbility3());
     }
+
+    public String displayName() {return "Medic";}
 }

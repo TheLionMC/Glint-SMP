@@ -12,4 +12,6 @@ public class Angel extends AbilityGroup {
         addAbility(new AngelAbility2());
         addAbility(new AngelAbility3());
     }
+
+    public String displayName() {return "Angel";}
 }

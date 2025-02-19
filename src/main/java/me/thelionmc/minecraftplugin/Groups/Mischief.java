@@ -1,15 +1,25 @@
 package me.thelionmc.minecraftplugin.Groups;
 
 import me.thelionmc.minecraftplugin.Abilities.Mischief.*;
+import me.thelionmc.minecraftplugin.GlintSMP;
+import org.bukkit.plugin.Plugin;
 
 public class Mischief extends AbilityGroup {
-    public Mischief() {
+    Plugin plugin;
+    GlintSMP main;
+    public Mischief(Plugin plugin, GlintSMP main) {
+        this.plugin = plugin;
+        this.main = main;
+
         defineAbilities();
     }
+
     @Override
     protected void defineAbilities() {
         addAbility(new MischiefAbility1());
         addAbility(new MischiefAbility2());
-        addAbility(new MischiefAbility3());
+        addAbility(new MischiefAbility3(main, plugin));
     }
+
+    public String displayName() {return "Mischief";}
 }

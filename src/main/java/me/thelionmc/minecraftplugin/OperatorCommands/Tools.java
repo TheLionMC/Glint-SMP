@@ -247,10 +247,10 @@ public class Tools implements CommandExecutor, TabCompleter, Listener {
         BanList banList = Bukkit.getBanList(BanList.Type.NAME);
         String reason = ChatColor.RED + "You have been struck by the ban hammer!";
 
-        if(item.equals(Material.NETHERITE_AXE) || item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "Ban Hammer")) {
+        if(item.getType().equals(Material.NETHERITE_AXE) || Objects.requireNonNull(item.getItemMeta()).getDisplayName().equalsIgnoreCase(ChatColor.RED + "Ban Hammer")) {
             banvictim.kickPlayer(ChatColor.RED + "You have been struck by the ban hammer!");
             banList.addBan(banvictim.getName(), reason, (Date)null, banvictim.getName());
-        } else if (item.equals(Material.WOODEN_SWORD) || item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "One Shot Sword")) {
+        } else if (item.getType().equals(Material.WOODEN_SWORD) || item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.RED + "One Shot Sword")) {
             banvictim.setHealth(0);
         }
     }

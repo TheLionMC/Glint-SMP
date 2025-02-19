@@ -19,5 +19,5 @@ public class MedicAbility1 extends Cooldown implements Ability {
     public void execute(Player player) {
 
     }
-    public String displayName() {return "Ability 1 Medic Class";}
+    public String abilityName() {return "Ability 1 Medic Class";}
 }

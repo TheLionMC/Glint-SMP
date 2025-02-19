@@ -12,4 +12,6 @@ public class Farmer extends AbilityGroup {
         addAbility(new FarmerAbility2());
         addAbility(new FarmerAbility3());
     }
+
+    public String displayName() {return "Farmer";}
 }

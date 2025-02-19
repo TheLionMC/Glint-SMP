@@ -114,11 +114,11 @@ public class BrisknessAxe implements Listener {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("The Briskness Axe");
         meta.addEnchant(Enchantment.MENDING, 1, true);
-        meta.addEnchant(Enchantment.DURABILITY, 3, true);
+        meta.addEnchant(Enchantment.UNBREAKING, 3, true);
         meta.setUnbreakable(true);
-        meta.addEnchant(Enchantment.DAMAGE_ALL, 5, true);
-        meta.addEnchant(Enchantment.DIG_SPEED, 5, true);
-        meta.addEnchant(Enchantment.LOOT_BONUS_BLOCKS, 1, true);
+        meta.addEnchant(Enchantment.SHARPNESS, 5, true);
+        meta.addEnchant(Enchantment.EFFICIENCY, 5, true);
+        meta.addEnchant(Enchantment.LOOTING, 1, true);
         item.setItemMeta(meta);
         return item;
     }
@@ -154,7 +154,7 @@ public class BrisknessAxe implements Listener {
                                 for(Player otherPlayer : Bukkit.getOnlinePlayers()) {
                                     if(otherPlayer != player) {
                                         if(otherPlayer.getLocation().distance(player.getLocation()) <= 15) {
-                                            otherPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, activeSeconds * 20, 2, true, true));
+                                            otherPlayer.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, activeSeconds * 20, 2, true, true));
                                         }
                                     }
                                 }
@@ -228,7 +228,7 @@ public class BrisknessAxe implements Listener {
             double y = start.getY() + (end.getY() - start.getY()) * ratio;
             double z = start.getZ() + (end.getZ() - start.getZ()) * ratio;
             Location particleLocation = new Location(start.getWorld(), x, y, z);
-            particleLocation.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1, new Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
+            particleLocation.getWorld().spawnParticle(Particle.DUST, particleLocation, 1, new Particle.DustOptions(org.bukkit.Color.YELLOW, 1));
         }
     }
 }

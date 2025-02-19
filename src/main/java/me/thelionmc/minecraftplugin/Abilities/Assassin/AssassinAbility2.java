@@ -20,5 +20,5 @@ public class AssassinAbility2 extends Cooldown implements Ability {
 
     }
 
-    public String displayName() {return "Ability 2 Assassin Class";}
+    public String abilityName() {return "Ability 2 Assassin Class";}
 }

@@ -7,8 +7,7 @@ import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.customItems.Shard;
 import me.thelionmc.minecraftplugin.events.Dragondeathevent;
 import me.thelionmc.minecraftplugin.events.ReviveEvent;
-import org.bukkit.SoundCategory;
-import org.bukkit.attribute.Attributable;
+import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Item;
@@ -21,9 +20,12 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
+import org.checkerframework.checker.nullness.qual.NonNull;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 public class GlintSMP extends JavaPlugin implements Listener {
@@ -109,6 +111,21 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getLogger().info("GlintSMP is ready to go!!!");
     }
 
+    public void resetAttributes(@NonNull Player player) {
+        AttributeInstance movementSpeed = player.getAttribute(Attribute.GENERIC_MOVEMENT_SPEED);
+        AttributeInstance gravity = player.getAttribute(Attribute.GENERIC_GRAVITY);
+        AttributeInstance fallDamage = player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER);
+
+        movementSpeed.setBaseValue(0.7);
+        gravity.setBaseValue(0.08);
+        fallDamage.setBaseValue(1);
+    }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        Player player = e.getPlayer();
+        resetAttributes(player);
+    }
     @EventHandler
     public void onEntityCombust(EntityCombustEvent e) {
         if (e.getEntity() instanceof Item) {
@@ -123,10 +140,34 @@ public class GlintSMP extends JavaPlugin implements Listener {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             Player player = (Player)event.getEntity();
             Player damager = (Player)event.getDamager();
-            if (damager.getEquipment().getItemInMainHand().getItemMeta().getItemName().toLowerCase().contains("axe") && player.isBlocking() && (int)event.getFinalDamage() == 0) {
-                damager.playSound(damager.getLocation(), SoundCategory.BLOCKS.name() SoundCategory.MASTER, 5.0F, 1.0F);
+            if (Objects.requireNonNull(damager.getEquipment()).getItemInMainHand().getItemMeta().getItemName().toLowerCase().contains("axe") && player.isBlocking() && (int)event.getFinalDamage() == 0) {
+                damager.playSound(damager.getLocation(), Sound.ENTITY_ITEM_BREAK, 5.0F, 1.0F);
             }
         }
+    }
+
+    public void scalePlayer(Player player, double scale) {
+        if(Objects.requireNonNull(player.getAttribute(Attribute.GENERIC_SCALE)).getValue() == scale) {
+            return;
+        }
+
+        new BukkitRunnable() {
+            @Override
+            public void run() {
+                AttributeInstance attribute = player.getAttribute(Attribute.GENERIC_SCALE);
+                double val = attribute.getBaseValue();
+                if(val > scale) {
+                    attribute.setBaseValue(val + 0.01);
+                }
+                if(val < scale) {
+                    attribute.setBaseValue(val - 0.01);
+                }
+
+                if(val == scale) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer(this, 0, 1);
     }
 
     @Override

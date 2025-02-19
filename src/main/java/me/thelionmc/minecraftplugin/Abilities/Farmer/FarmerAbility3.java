@@ -20,5 +20,5 @@ public class FarmerAbility3 extends Cooldown implements Ability {
 
     }
 
-    public String displayName() {return "Ability 3 Farmer Class";}
+    public String abilityName() {return "Ability 3 Farmer Class";}
 }

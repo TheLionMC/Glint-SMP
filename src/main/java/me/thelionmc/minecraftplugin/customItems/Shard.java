@@ -17,7 +17,7 @@ public class Shard extends ItemStack {
         super(Material.NETHER_STAR, 1);
         ItemMeta meta = getItemMeta();
         meta.setDisplayName(ChatColor.RED + "Shard");
-        meta.addEnchant(Enchantment.DURABILITY, 1, false);
+        meta.addEnchant(Enchantment.UNBREAKING, 1, false);
         meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         setItemMeta(meta);
     }

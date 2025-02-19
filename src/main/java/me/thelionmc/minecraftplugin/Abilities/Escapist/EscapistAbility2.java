@@ -19,5 +19,5 @@ public class EscapistAbility2 extends Cooldown implements Ability {
     public void execute(Player player) {
 
     }
-    public String displayName() {return "Ability 2 Escapist Class";}
+    public String abilityName() {return "Ability 2 Escapist Class";}
 }

@@ -19,5 +19,5 @@ public class NinjaAbility3 extends Cooldown implements Ability {
 
     }
 
-    public String displayName() {return "Ability 3 Ninja Class";}
+    public String abilityName() {return "Ability 3 Ninja Class";}
 }

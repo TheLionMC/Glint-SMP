@@ -12,4 +12,6 @@ public class Warrior extends AbilityGroup {
         addAbility(new WarriorAbility2());
         addAbility(new WarriorAbility3());
     }
+
+    public String displayName() {return "Warrior";}
 }

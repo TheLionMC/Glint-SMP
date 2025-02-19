@@ -20,5 +20,5 @@ public class AngelAbility3 extends Cooldown implements Ability {
 
     }
 
-    public String displayName() {return "Ability 3 Angel Class";}
+    public String abilityName() {return "Ability 3 Angel Class";}
 }

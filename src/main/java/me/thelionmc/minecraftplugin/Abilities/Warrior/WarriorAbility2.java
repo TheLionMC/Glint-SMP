@@ -20,5 +20,5 @@ public class WarriorAbility2 extends Cooldown implements Ability {
 
     }
 
-    public String displayName() {return "Ability 2 Warrior Class";}
+    public String abilityName() {return "Ability 2 Warrior Class";}
 }

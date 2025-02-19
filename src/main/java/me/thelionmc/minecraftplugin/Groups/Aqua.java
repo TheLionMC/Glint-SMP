@@ -17,4 +17,6 @@ public class Aqua extends AbilityGroup {
         addAbility(new AquaAbility2());
         addAbility(new AquaAbility3());
     }
+
+    public String displayName() {return "Aqua";}
 }

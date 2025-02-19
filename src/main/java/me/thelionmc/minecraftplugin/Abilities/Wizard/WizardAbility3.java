@@ -20,5 +20,5 @@ public class WizardAbility3 extends Cooldown implements Ability {
 
 
     }
-    public String displayName() {return "Ability 3 Wizard Class";}
+    public String abilityName() {return "Ability 3 Wizard Class";}
 }

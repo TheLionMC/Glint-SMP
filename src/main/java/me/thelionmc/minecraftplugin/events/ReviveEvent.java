@@ -171,7 +171,7 @@ public class ReviveEvent implements Listener {
             @Override
             public void run() {
                 if (ticks >= 100) {
-                    beaconBlock.getWorld().spawnParticle(Particle.EXPLOSION_LARGE, beaconLoc, 1);
+                    beaconBlock.getWorld().spawnParticle(Particle.EXPLOSION, beaconLoc, 1);
                     beaconBlock.getWorld().playSound(beaconLoc, Sound.ENTITY_GENERIC_EXPLODE, 1, 1);
 
                     Bukkit.getBanList(BanList.Type.NAME).pardon(target.getName());
@@ -195,7 +195,7 @@ public class ReviveEvent implements Listener {
 
                     Location particleLoc = beaconLoc.clone().add(x, 0, z);
                     beaconBlock.getWorld().spawnParticle(
-                            Particle.REDSTONE,
+                            Particle.DUST,
                             particleLoc,
                             0,
                             new Particle.DustOptions(Color.RED, 1)
@@ -212,7 +212,7 @@ public class ReviveEvent implements Listener {
 
                         Location particleLoc = beaconLoc.clone().add(x, 0, z);
                         beaconBlock.getWorld().spawnParticle(
-                                Particle.REDSTONE,
+                                Particle.DUST,
                                 particleLoc,
                                 0,
                                 new Particle.DustOptions(Color.RED, 1)

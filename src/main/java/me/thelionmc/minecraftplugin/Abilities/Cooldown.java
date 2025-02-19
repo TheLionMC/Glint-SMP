@@ -2,7 +2,6 @@ package me.thelionmc.minecraftplugin.Abilities;
 
 import org.bukkit.ChatColor;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import java.util.HashMap;
@@ -41,7 +40,7 @@ public abstract class Cooldown {
 
     public abstract void execute(Player player);
 
-    public abstract String displayName();
+    public abstract String abilityName();
 
     public void useAbility(Player player) {
         if(!onCooldown(player)) {
@@ -50,7 +49,7 @@ public abstract class Cooldown {
             execute(player);
         } else {
             player.getWorld().playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
-            player.sendMessage(ChatColor.AQUA + displayName() + ChatColor.YELLOW + " is on cooldown!");
+            player.sendMessage(ChatColor.AQUA + abilityName() + ChatColor.YELLOW + " is on cooldown!");
         }
     }
 }

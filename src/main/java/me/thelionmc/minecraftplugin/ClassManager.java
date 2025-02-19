@@ -8,7 +8,6 @@ import java.util.Random;
 import java.util.UUID;
 
 import me.thelionmc.minecraftplugin.Groups.*;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -22,12 +21,14 @@ public class ClassManager implements Listener {
     private GlintSMP mainClass;
     private FileConfiguration classData;
     public Map<String, AbilityGroup> classMap = new HashMap();
+    ShardManager shardManager;
 
     public ClassManager(Plugin plugin, GlintSMP mainClass) {
         System.out.println("Initializing ClassManager...");
 
         this.mainClass = mainClass;
         this.plugin = plugin;
+        shardManager = new ShardManager(plugin, mainClass);
 
         if (!mainClass.getDataFolder().exists()) {
             mainClass.getDataFolder().mkdirs();
@@ -54,11 +55,11 @@ public class ClassManager implements Listener {
 
     private void populateClassMap() {
         classMap.put("Assassin", new Assassin());
-        classMap.put("Mischief", new Mischief());
+        classMap.put("Mischief", new Mischief(plugin, mainClass));
         classMap.put("Farmer", new Farmer());
         classMap.put("Warrior", new Warrior());
         classMap.put("Medic", new Medic(plugin, mainClass));
-        classMap.put("Miner", new Ninja());
+        classMap.put("Ninja", new Ninja(plugin, shardManager));
         classMap.put("Angel", new Angel());
         classMap.put("Aqua", new Aqua());
         classMap.put("Wizard", new Wizard());

@@ -227,7 +227,7 @@ public class SummonBoss implements CommandExecutor, Listener, TabCompleter {
         for (Player player : world.getPlayers()) {
             double distance = player.getLocation().distance(huskLocation);
             if (distance <= radius) {
-                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 100, 10));
+                player.addPotionEffect(new PotionEffect(PotionEffectType.SLOWNESS, 100, 10));
                 new BukkitRunnable() {
                     int ticks = 0;
                     @Override
@@ -238,7 +238,7 @@ public class SummonBoss implements CommandExecutor, Listener, TabCompleter {
                         }
                         player.damage(4.0, husk);
                         ticks += 20;
-                        world.spawnParticle(Particle.BLOCK_CRACK, huskLocation, 100, 5, 0.5, 5, 0.1, Material.SAND.createBlockData());
+                        world.spawnParticle(Particle.BLOCK, huskLocation, 100, 5, 0.5, 5, 0.1, Material.SAND.createBlockData());
                         world.playSound(huskLocation, Sound.BLOCK_SAND_BREAK, 1.0f, 0.5f);
                     }
                 }.runTaskTimer(plugin, 0, 20);
@@ -271,14 +271,14 @@ public class SummonBoss implements CommandExecutor, Listener, TabCompleter {
                 Snowball sandProjectile = husk.launchProjectile(Snowball.class);
                 sandProjectile.setVelocity(direction.multiply(1.5));
                 sandProjectile.setCustomName("sand_projectile");  // Naming the projectile
-                world.spawnParticle(Particle.BLOCK_CRACK, huskLocation.add(0, 3, 0), 20, 1, 1, 1, 0.2, Material.SAND.createBlockData());
+                world.spawnParticle(Particle.BLOCK, huskLocation.add(0, 3, 0), 20, 1, 1, 1, 0.2, Material.SAND.createBlockData());
                 world.playSound(huskLocation, Sound.ENTITY_PHANTOM_FLAP, 1.0f, 0.8f);
                 projectiles--;
             }
         }.runTaskTimer(plugin, 0, 5);
 
         for (Player player : nearbyPlayers) {
-            player.addPotionEffect(new PotionEffect(PotionEffectType.CONFUSION, 100, 1));
+            player.addPotionEffect(new PotionEffect(PotionEffectType.NAUSEA, 100, 1));
         }
     }
     @EventHandler
@@ -299,7 +299,7 @@ public class SummonBoss implements CommandExecutor, Listener, TabCompleter {
         Location location = wither.getLocation();
         World world = wither.getWorld();
         if (world == null) return;
-        world.spawnParticle(Particle.SMOKE_LARGE, location, 50, 3, 3, 3, 0.1);
+        world.spawnParticle(Particle.LARGE_SMOKE, location, 50, 3, 3, 3, 0.1);
         world.playSound(location, Sound.ENTITY_WITHER_BREAK_BLOCK, 2.0f, 0.5f);
         for (Player player : world.getPlayers()) {
             if (player.getLocation().distance(location) <= 10) {
@@ -340,7 +340,7 @@ public class SummonBoss implements CommandExecutor, Listener, TabCompleter {
                 Location targetLocation = player.getLocation().clone().add(0, -1, 0);
                 if (targetLocation.getBlock().getType() != Material.AIR) {
                     targetLocation.getBlock().setType(Material.AIR);
-                    world.spawnParticle(Particle.BLOCK_CRACK, targetLocation, 10, 0.2, 0.2, 0.2, Material.STONE.createBlockData());
+                    world.spawnParticle(Particle.BLOCK, targetLocation, 10, 0.2, 0.2, 0.2, Material.STONE.createBlockData());
                 }
                 player.setVelocity(new Vector(0, -1, 0));
 

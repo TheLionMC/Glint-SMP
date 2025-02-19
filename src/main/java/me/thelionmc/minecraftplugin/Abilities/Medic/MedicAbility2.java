@@ -92,7 +92,7 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
                     double x = Math.cos(angle + (i * Math.PI / 4)) * 1;
                     double z = Math.sin(angle + (i * Math.PI / 4)) * 1;
                     Location particleLoc = player.getLocation().clone().add(x, 1, z);
-                    player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, particleLoc, 1, 0, 0, 0, 0);
+                    player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, particleLoc, 1, 0, 0, 0, 0);
                 }
                 angle += Math.PI / 16;
 
@@ -127,7 +127,7 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
         }
     }
 
-    public String displayName() {
+    public String abilityName() {
         return "Meditation";
     }
 }

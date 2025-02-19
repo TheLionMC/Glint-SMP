@@ -12,4 +12,6 @@ public class Wizard extends AbilityGroup {
         addAbility(new WizardAbility2());
         addAbility(new WizardAbility3());
     }
+
+    public String displayName() {return "Wizard";}
 }

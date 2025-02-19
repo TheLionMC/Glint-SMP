@@ -19,5 +19,5 @@ public class AquaAbility2 extends Cooldown implements Ability {
     public void execute(Player player) {
 
     }
-    public String displayName() {return "Ability 2 Aqua Class";}
+    public String abilityName() {return "Ability 2 Aqua Class";}
 }

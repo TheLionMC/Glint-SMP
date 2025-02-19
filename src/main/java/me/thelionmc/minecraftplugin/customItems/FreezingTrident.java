@@ -95,7 +95,7 @@ public class FreezingTrident implements Listener {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(ChatColor.AQUA + "The Freezing Trident");
         meta.addEnchant(Enchantment.MENDING, 1, true);
-        meta.addEnchant(Enchantment.DURABILITY, 3, true);
+        meta.addEnchant(Enchantment.UNBREAKING, 3, true);
         meta.addEnchant(Enchantment.IMPALING, 5, true);
         meta.addEnchant(Enchantment.LOYALTY, 3, true);
         meta.setUnbreakable(true);
@@ -145,7 +145,7 @@ public class FreezingTrident implements Listener {
                         Location blockLoc = loc.clone().add(x, y, z);
                         if (blockLoc.getBlock().getType() == Material.AIR) {
                             blockLoc.getBlock().setType(Material.FROSTED_ICE);
-                        } else if (blockLoc.getBlock().getType()== Material.GRASS) {
+                        } else if (blockLoc.getBlock().getType()== Material.GRASS_BLOCK) {
                             blockLoc.getBlock().setType(Material.FROSTED_ICE);
                         } else if (blockLoc.getBlock().getType() == Material.SNOW) {
                             blockLoc.getBlock().setType(Material.FROSTED_ICE);
@@ -243,7 +243,7 @@ public class FreezingTrident implements Listener {
             double y = start.getY() + (end.getY() - start.getY()) * ratio;
             double z = start.getZ() + (end.getZ() - start.getZ()) * ratio;
             Location particleLocation = new Location(start.getWorld(), x, y, z);
-            particleLocation.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1, new Particle.DustOptions(org.bukkit.Color.AQUA, 1));
+            particleLocation.getWorld().spawnParticle(Particle.DUST, particleLocation, 1, new Particle.DustOptions(org.bukkit.Color.AQUA, 1));
         }
     }
 }

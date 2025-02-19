@@ -87,11 +87,11 @@ public class CleansingBow implements Listener {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName("§4The Cleansing Bow");
         meta.addEnchant(Enchantment.MENDING, 1, true);
-        meta.addEnchant(Enchantment.DURABILITY, 3, true);
+        meta.addEnchant(Enchantment.UNBREAKING, 3, true);
         meta.setUnbreakable(true);
-        meta.addEnchant(Enchantment.ARROW_DAMAGE, 6, true);
-        meta.addEnchant(Enchantment.ARROW_FIRE, 1, true);
-        meta.addEnchant(Enchantment.ARROW_KNOCKBACK, 1, true);
+        meta.addEnchant(Enchantment.POWER, 6, true);
+        meta.addEnchant(Enchantment.FLAME, 1, true);
+        meta.addEnchant(Enchantment.PUNCH, 1, true);
         item.setItemMeta(meta);
         return item;
     }
@@ -123,7 +123,7 @@ public class CleansingBow implements Listener {
                     if (!player.hasCooldown(Material.BOW)) {
                         Location location = player.getEyeLocation();
                         Arrow arrow = player.getWorld().spawnArrow(location, location.getDirection(), 1.5f, 0.0f);
-                        arrow.addCustomEffect(new PotionEffect(PotionEffectType.HARM, 1, 2), true);
+                        arrow.addCustomEffect(new PotionEffect(PotionEffectType.INSTANT_DAMAGE, 1, 2), true);
 
                         cooldowns.put(playerId, cooldowns.getOrDefault(playerId, System.currentTimeMillis()) - 2000);
                         player.setCooldown(Material.BOW, 10);
@@ -180,7 +180,7 @@ public class CleansingBow implements Listener {
             double y = start.getY() + (end.getY() - start.getY()) * ratio;
             double z = start.getZ() + (end.getZ() - start.getZ()) * ratio;
             Location particleLocation = new Location(start.getWorld(), x, y, z);
-            particleLocation.getWorld().spawnParticle(Particle.REDSTONE, particleLocation, 1, new Particle.DustOptions(org.bukkit.Color.AQUA, 1));
+            particleLocation.getWorld().spawnParticle(Particle.DUST, particleLocation, 1, new Particle.DustOptions(org.bukkit.Color.AQUA, 1));
         }
     }
 }

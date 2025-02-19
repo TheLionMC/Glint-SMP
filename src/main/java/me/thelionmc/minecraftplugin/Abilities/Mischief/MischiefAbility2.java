@@ -28,7 +28,7 @@ public class MischiefAbility2 extends Cooldown implements Ability {
         for (int i = 0; i < 50; i++) {
             Bukkit.getScheduler().runTaskLater(
                     Objects.requireNonNull(Bukkit.getPluginManager().getPlugin("GlintSMP")),
-                    () -> player.getWorld().spawnParticle(Particle.SMOKE_LARGE, player.getLocation(), 100, 3, 3, 3, 0.2),
+                    () -> player.getWorld().spawnParticle(Particle.LARGE_SMOKE, player.getLocation(), 100, 3, 3, 3, 0.2),
                     i * 2L
             );
         }
@@ -41,7 +41,7 @@ public class MischiefAbility2 extends Cooldown implements Ability {
         });
     }
 
-    public String displayName() {
+    public String abilityName() {
         return "Smoke Bomb";
     }
 }

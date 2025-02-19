@@ -32,4 +32,6 @@ public abstract class AbilityGroup {
     protected void addAbility(Ability ability) {
         abilities.add(ability);
     }
+
+    public abstract String displayName();
 }

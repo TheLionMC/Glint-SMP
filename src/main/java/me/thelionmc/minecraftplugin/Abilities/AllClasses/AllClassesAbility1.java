@@ -20,5 +20,5 @@ public class AllClassesAbility1 extends Cooldown implements Ability {
 
     }
 
-    public String displayName() {return "All Classes Ability 1";}
+    public String abilityName() {return "All Classes Ability 1";}
 }

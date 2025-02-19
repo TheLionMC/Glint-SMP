@@ -35,7 +35,7 @@ public class ActionBarManager {
 
                     if(selectedAbility.containsKey(player.getUniqueId())) {
                         Ability ability = group.getAbilities().get(selectedAbility.get(player.getUniqueId()) - 1);
-                        String initialString = ChatColor.AQUA + ability.displayName() + ChatColor.WHITE + " | ";
+                        String initialString = ChatColor.AQUA + group.displayName() + ChatColor.WHITE + " | " + ChatColor.AQUA + ability.abilityName() + ChatColor.WHITE + " | ";
                         StringBuilder builder = new StringBuilder(initialString);
 
                         if(ability.onCooldown(player)) {

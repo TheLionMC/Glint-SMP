@@ -11,4 +11,6 @@ public class Assassin extends AbilityGroup {
         addAbility(new AssassinAbility2());
         addAbility(new AssassinAbility3());
     }
+
+    public String displayName() {return "Assassin";}
 }

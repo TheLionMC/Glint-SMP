@@ -94,7 +94,7 @@ public class StaffMenu implements CommandExecutor, Listener {
         }
         playerControls.setItemMeta(playerControlsMeta);
         if (i == 1) {
-            playerControls.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+            playerControls.addUnsafeEnchantment(Enchantment.FEATHER_FALLING, 1);
             List<String> lore = new ArrayList<>();
             lore.add(ChatColor.YELLOW + "Selected Tab");
             playerControlsMeta.setLore(lore);
@@ -162,7 +162,7 @@ public class StaffMenu implements CommandExecutor, Listener {
         ItemMeta meta = item.getItemMeta();
         meta.setDisplayName(name);
         if (isSelected) {
-            item.addUnsafeEnchantment(Enchantment.PROTECTION_FALL, 1);
+            item.addUnsafeEnchantment(Enchantment.FEATHER_FALLING, 1);
             meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
         }
         item.setItemMeta(meta);
