@@ -13,10 +13,13 @@ import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
 
-public class ActionBarManager {
+public class ActionBarManager implements Listener {
     GlintSMP main;
     ClassManager classManager;
     Plugin plugin;
@@ -26,6 +29,10 @@ public class ActionBarManager {
         this.main = main;
         this.classManager = classManager;
         this.plugin = plugin;
+
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            selectedAbility.put(player.getUniqueId(), 1);
+        }
 
         new BukkitRunnable() {
             @Override
@@ -78,4 +85,10 @@ public class ActionBarManager {
 
         group.getAbilities().get(selected - 1).useAbility(player);
     }
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent e) {
+        selectedAbility.put(e.getPlayer().getUniqueId(), 1);
+    }
+
 }

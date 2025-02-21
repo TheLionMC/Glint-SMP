@@ -15,13 +15,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityCombustEvent;
-
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.checkerframework.checker.nullness.qual.NonNull;
+import
+
 
 import java.util.HashMap;
 import java.util.Map;
@@ -82,6 +83,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getServer().getPluginManager().registerEvents(dragondeathevent, this);
         getServer().getPluginManager().registerEvents(shardManager, this);
         getServer().getPluginManager().registerEvents(classManager, this);
+        getServer().getPluginManager().registerEvents(abilityManager, this);
         getServer().getPluginManager().registerEvents(new CoreProtectTool(this), this);
         getServer().getPluginManager().registerEvents(new Tools(), this);
 
@@ -116,7 +118,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         AttributeInstance gravity = player.getAttribute(Attribute.GENERIC_GRAVITY);
         AttributeInstance fallDamage = player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER);
 
-        movementSpeed.setBaseValue(0.7);
+        movementSpeed.setBaseValue(0.10000000149011612);
         gravity.setBaseValue(0.08);
         fallDamage.setBaseValue(1);
     }
@@ -140,9 +142,12 @@ public class GlintSMP extends JavaPlugin implements Listener {
         if (event.getEntity() instanceof Player && event.getDamager() instanceof Player) {
             Player player = (Player)event.getEntity();
             Player damager = (Player)event.getDamager();
-            if (Objects.requireNonNull(damager.getEquipment()).getItemInMainHand().getItemMeta().getItemName().toLowerCase().contains("axe") && player.isBlocking() && (int)event.getFinalDamage() == 0) {
-                damager.playSound(damager.getLocation(), Sound.ENTITY_ITEM_BREAK, 5.0F, 1.0F);
+            if(damager.getEquipment().getItemInMainHand() != null) {
+                if (damager.getEquipment().getItemInMainHand().getItemMeta().getItemName().toLowerCase().contains("axe") && player.isBlocking() && (int)event.getFinalDamage() == 0) {
+                    damager.playSound(damager.getLocation(), Sound.ENTITY_ITEM_BREAK, 5.0F, 1.0F);
+                }
             }
+
         }
     }
 

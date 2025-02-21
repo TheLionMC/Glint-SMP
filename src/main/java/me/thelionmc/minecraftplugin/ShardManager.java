@@ -31,7 +31,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.Plugin;
 
 
-import static me.thelionmc.minecraftplugin.GlintSMP.shardCounts;
+import static me.thelionmc.minecraftplugin.GlintSMP.shard;
 
 public class ShardManager implements Listener, CommandExecutor, TabCompleter {
     final private FileConfiguration shardData;
@@ -57,9 +57,6 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
         this.shardData.set(playerID.toString(), shardCount);
         this.saveShardData();
     }
-    private void setPlayerShards(UUID playerId, int shardCount) {
-        shardCounts.put(playerId, shardCount);
-    }
 
     public int getShards(UUID playerID) {
         return this.shardData.getInt(playerID.toString());
@@ -70,7 +67,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
         Player player = e.getPlayer();
         UUID playerID = player.getUniqueId();
         if (!this.shardData.contains(playerID.toString())) {
-            this.setShards(playerID, 0);
+            this.setShards(playerID, 10);
         }
     }
 
@@ -80,8 +77,12 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
         UUID playerID = player.getUniqueId();
         if (this.getShards(playerID) - 1 > 0) {
             this.setShards(playerID, this.getShards(playerID) - 1);
+            player.sendMessage(org.bukkit.ChatColor.BLUE + "[GlintSMP] " + org.bukkit.ChatColor.RED + "You have lost a shard, your shardcount is now: " + this.getShards(playerID));
+            player.sendTitle(ChatColor.RED + "-1", ChatColor.RED + "You have lost a shard");
+            player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK,5.0F,1.0F);
+            e.getDrops().add(shard);
         } else {
-            this.setShards(playerID, 4);
+            this.setShards(playerID, 3);
             BanList banList = Bukkit.getBanList(Type.NAME);
             String reason = "You ran out of shards!";
             banList.addBan(player.getName(), ChatColor.RED + "You have run out of Shards!", (Date)null, player.getName());
@@ -99,7 +100,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
         if (handItem != null && handItem.isSimilar(GlintSMP.shard) && !player.isSneaking()) {
             if (!player.hasCooldown(Material.NETHER_STAR)) {
                 if (this.getShards(player.getUniqueId()) >= 20) {
-                    player.sendMessage(ChatColor.RED + "You cannot have more than 20 Shards.");
+                    player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "You cannot have more than 20 Shards.");
                     player.getWorld().playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1.0F, 1.0F);
                     player.setCooldown(Material.NETHER_STAR, 5);
                 } else {
@@ -163,7 +164,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
                     if (targetPlayer != null && targetPlayer.isOnline()) {
                         UUID targetPlayerId = targetPlayer.getUniqueId();
                         if (amount >= 0) {
-                            setPlayerShards(targetPlayerId, amount);
+                            setShards(targetPlayerId, amount);
                             sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.GREEN + "Shards set to " + amount + " for player " + playerName);
                             return true;
                         } else {

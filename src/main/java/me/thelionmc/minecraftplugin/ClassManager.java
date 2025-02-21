@@ -54,7 +54,7 @@ public class ClassManager implements Listener {
     }
 
     private void populateClassMap() {
-        classMap.put("Assassin", new Assassin());
+        classMap.put("Assassin", new Assassin(plugin, mainClass));
         classMap.put("Mischief", new Mischief(plugin, mainClass));
         classMap.put("Farmer", new Farmer());
         classMap.put("Warrior", new Warrior());

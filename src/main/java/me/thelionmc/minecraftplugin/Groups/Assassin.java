@@ -1,14 +1,20 @@
 package me.thelionmc.minecraftplugin.Groups;
 
 import me.thelionmc.minecraftplugin.Abilities.Assassin.*;
+import me.thelionmc.minecraftplugin.GlintSMP;
+import org.bukkit.plugin.Plugin;
 
 public class Assassin extends AbilityGroup {
-    public Assassin() {
+    Plugin plugin;
+    GlintSMP mainClass;
+    public Assassin(Plugin plugin, GlintSMP main) {
+        this.plugin = plugin;
+        this.mainClass = main;
         defineAbilities();
     }
     protected void defineAbilities() {
         addAbility(new AssassinAbility1());
-        addAbility(new AssassinAbility2());
+        addAbility(new AssassinAbility2(plugin, mainClass));
         addAbility(new AssassinAbility3());
     }
 
