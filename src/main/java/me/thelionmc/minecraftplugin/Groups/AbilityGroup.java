@@ -2,14 +2,20 @@ package me.thelionmc.minecraftplugin.Groups;
 
 import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.Abilities.AllClasses.AllClassesAbility1;
+import org.jetbrains.annotations.NotNull;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.builder.qual.NotCalledMethods;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public abstract class AbilityGroup {
-    private List<Ability> abilities = new ArrayList<>();
+public abstract class AbilityGroup implements ConfigurationSerializable {
+    List<Ability> abilities = new ArrayList<>();
 
     public AbilityGroup() {
         //abilities.add(new AllClassesAbility1()); // ➕ Add here any ability that every player will have
@@ -23,6 +29,13 @@ public abstract class AbilityGroup {
             return;
         }
         abilities.get(x).useAbility(player);
+    }
+
+    @Override
+    public @NotNull Map<String, Object> serialize() {
+        Map<String, Object> map = new HashMap<>();
+        map.put("abilities", abilities);
+        return map;
     }
 
     public List<Ability> getAbilities() {

@@ -38,7 +38,7 @@ public class ActionBarManager implements Listener {
             @Override
             public void run () {
                 for(Player player : Bukkit.getOnlinePlayers()) {
-                    AbilityGroup group = classManager.classMap.get(classManager.getPlayerClass(player.getUniqueId()));
+                    AbilityGroup group = classManager.getPlayerGroup(player.getUniqueId());
 
                     if(selectedAbility.containsKey(player.getUniqueId())) {
                         Ability ability = group.getAbilities().get(selectedAbility.get(player.getUniqueId()) - 1);
@@ -64,7 +64,7 @@ public class ActionBarManager implements Listener {
     }
 
     public void nextSelectedAbility(Player player) {
-        AbilityGroup group = classManager.classMap.get(classManager.getPlayerClass(player.getUniqueId()));
+        AbilityGroup group = classManager.getPlayerGroup(player.getUniqueId());
         if(selectedAbility.containsKey(player.getUniqueId())) {
             int selected = selectedAbility.get(player.getUniqueId());
 
@@ -80,7 +80,7 @@ public class ActionBarManager implements Listener {
     }
 
     public void useAbility(Player player) {
-        AbilityGroup group = classManager.classMap.get(classManager.getPlayerClass(player.getUniqueId()));
+        AbilityGroup group = classManager.getPlayerGroup(player.getUniqueId());
         int selected = selectedAbility.get(player.getUniqueId());
 
         group.getAbilities().get(selected - 1).useAbility(player);

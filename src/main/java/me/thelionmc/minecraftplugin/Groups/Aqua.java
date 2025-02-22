@@ -7,8 +7,11 @@ import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility1;
 import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility2;
 import me.thelionmc.minecraftplugin.Abilities.Aqua.AquaAbility3;
 
+import java.util.ArrayList;
+
 public class Aqua extends AbilityGroup {
     public Aqua() {
+        this.abilities = new ArrayList<>();
         defineAbilities();
     }
     @Override

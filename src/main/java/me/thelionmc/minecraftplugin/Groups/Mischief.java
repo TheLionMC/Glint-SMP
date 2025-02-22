@@ -4,6 +4,8 @@ import me.thelionmc.minecraftplugin.Abilities.Mischief.*;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class Mischief extends AbilityGroup {
     Plugin plugin;
     GlintSMP main;
@@ -11,6 +13,7 @@ public class Mischief extends AbilityGroup {
         this.plugin = plugin;
         this.main = main;
 
+        this.abilities = new ArrayList<>();
         defineAbilities();
     }
 

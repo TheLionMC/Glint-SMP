@@ -2,8 +2,11 @@ package me.thelionmc.minecraftplugin.Groups;
 
 import me.thelionmc.minecraftplugin.Abilities.Wizard.*;
 
+import java.util.ArrayList;
+
 public class Wizard extends AbilityGroup {
     public Wizard() {
+        this.abilities = new ArrayList<>();
         defineAbilities();
     }
     @Override

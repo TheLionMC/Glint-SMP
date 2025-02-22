@@ -1,5 +1,6 @@
 package me.thelionmc.minecraftplugin;
 
+import me.thelionmc.minecraftplugin.Groups.AbilityGroup;
 import me.thelionmc.minecraftplugin.OperatorCommands.*;
 import me.thelionmc.minecraftplugin.PlayerCommands.AbilityKeybinds;
 import me.thelionmc.minecraftplugin.PlayerCommands.Trust;
@@ -7,9 +8,11 @@ import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.customItems.Shard;
 import me.thelionmc.minecraftplugin.events.Dragondeathevent;
 import me.thelionmc.minecraftplugin.events.ReviveEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -44,6 +47,8 @@ public class GlintSMP extends JavaPlugin implements Listener {
     AbilityKeybinds keys;
     TrustManager trustManager;
     Trust trust;
+    DisableClass disableClass;
+    EnableClass enableClass;
 
     SetCooldown resetcooldown;
 
@@ -72,6 +77,8 @@ public class GlintSMP extends JavaPlugin implements Listener {
         resetcooldown = new SetCooldown(classManager);
         trustManager = new TrustManager(this);
         trust = new Trust(trustManager);
+        disableClass = new DisableClass(classManager);
+        enableClass = new EnableClass(classManager);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(staffMenu, this);
@@ -104,10 +111,24 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("setcooldown").setExecutor(new SetCooldown(classManager));
         getCommand("trust").setExecutor(trust);
         getCommand("distrust").setExecutor(trust);
+        getCommand("enableclass").setExecutor(enableClass);
+        getCommand("disableclass").setExecutor(disableClass);
+
         getCommand("gettool").setTabCompleter(new Tools());
         getCommand("summonboss").setTabCompleter(summonBoss);
         getCommand("setclass").setTabCompleter(classCommands);
         getCommand("withdraw").setTabCompleter(new ShardManager(this, this));
+        getCommand("enableclass").setTabCompleter(enableClass);
+        getCommand("disableclass").setTabCompleter(disableClass);
+
+        ConfigurationSerialization.registerClass(AbilityGroup.class);
+
+        //In case of a /reload
+        for(Player player : Bukkit.getOnlinePlayers()) {
+            if(!classManager.playerHasGroup(player.getUniqueId())) {
+                classManager.setPlayerGroup(player.getUniqueId(), classManager.randomEnabledGroup());
+            }
+        }
 
         getLogger().info("GlintSMP is ready to go!!!");
     }
@@ -181,5 +202,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getLogger().info("GlintSMP shut down.");
         shardManager.saveShardData();
         trustManager.saveTrustData();
+        classManager.saveClassData();
+        classManager.saveEnabledClassData();
     }
 }

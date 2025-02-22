@@ -4,6 +4,8 @@ import me.thelionmc.minecraftplugin.Abilities.Ninja.*;
 import me.thelionmc.minecraftplugin.ShardManager;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class Ninja extends AbilityGroup {
     ShardManager shardManager;
     Plugin plugin;
@@ -11,6 +13,7 @@ public class Ninja extends AbilityGroup {
         this.plugin = plugin;
         this.shardManager = shardManager;
 
+        this.abilities = new ArrayList<>();
         defineAbilities();
     }
     @Override

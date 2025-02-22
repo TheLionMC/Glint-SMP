@@ -4,10 +4,13 @@ import me.thelionmc.minecraftplugin.Abilities.Assassin.*;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class Assassin extends AbilityGroup {
     Plugin plugin;
     GlintSMP mainClass;
     public Assassin(Plugin plugin, GlintSMP main) {
+        this.abilities = new ArrayList<>();
         this.plugin = plugin;
         this.mainClass = main;
         defineAbilities();

@@ -2,8 +2,11 @@ package me.thelionmc.minecraftplugin.Groups;
 
 import me.thelionmc.minecraftplugin.Abilities.Farmer.*;
 
+import java.util.ArrayList;
+
 public class Farmer extends AbilityGroup {
     public Farmer() {
+        this.abilities = new ArrayList<>();
         defineAbilities();
     }
     @Override

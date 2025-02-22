@@ -84,4 +84,12 @@ commands:
   distrust:
     description: Allows you to distrust a player making your abilities affect the player again
     usage: /distrust [playerName]
+  enableclass:
+    description: Enables a class.
+    usage: /enableClass [className]
+    permission: op
+  disableclass:
+    description: Disables a class.
+    usage: /disableClass [className]
+    permission: op
 

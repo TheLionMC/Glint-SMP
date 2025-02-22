@@ -6,6 +6,8 @@ import me.thelionmc.minecraftplugin.Abilities.Medic.MedicAbility3;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.plugin.Plugin;
 
+import java.util.ArrayList;
+
 public class Medic extends AbilityGroup {
     private final GlintSMP mainClass;
     private final Plugin plugin;
@@ -14,6 +16,7 @@ public class Medic extends AbilityGroup {
         this.mainClass = mainClass;
         this.plugin = plugin;
 
+        this.abilities = new ArrayList<>();
         defineAbilities();
     }
 
