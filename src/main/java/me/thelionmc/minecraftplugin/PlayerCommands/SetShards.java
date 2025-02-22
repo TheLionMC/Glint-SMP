@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.OperatorCommands;
+package me.thelionmc.minecraftplugin.PlayerCommands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
