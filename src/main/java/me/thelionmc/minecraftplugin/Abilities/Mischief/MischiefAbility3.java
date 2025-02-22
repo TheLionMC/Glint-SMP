@@ -2,29 +2,18 @@ package me.thelionmc.minecraftplugin.Abilities.Mischief;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
-import com.comphenix.protocol.events.PacketContainer;
-import com.comphenix.protocol.PacketType;
-import com.comphenix.protocol.wrappers.*;
-import com.mojang.authlib.GameProfile;
 import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.Abilities.Cooldown;
 import me.thelionmc.minecraftplugin.FakePlayer;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitRunnable;
-import org.bukkit.util.Vector;
-import com.mojang.authlib.properties.Property;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,13 +46,12 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
             return;
         }
         Location spawnLoc = target.getLocation();
+        int botCount = 1;
 
-        int dummyCount = 3;
+        for (int i = 0; i < botCount; i++) {
 
-        for (int i = 0; i < dummyCount; i++) {
-
-            FakePlayer dummy = new FakePlayer(player, player.getLocation());
-
+            FakePlayer dummy = new FakePlayer(player);
+/*
             new BukkitRunnable() {
                 @Override
                 public void run() {
@@ -83,25 +71,27 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
                     }
                     Vector direction = targetLoc.toVector().subtract(currentLoc.toVector()).normalize();
                     Location newLoc = currentLoc.clone().add(direction.multiply(0.5));
-                    //dummy.teleport(newLoc);
+                    dummy.teleport(newLoc);
                 }
             }.runTaskTimer(plugin, 0L, 1L);
-        }
 
-        player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "You have summoned 3 dummies to attack " + target.getName() + "!");
+
+         */
+            player.sendMessage("§aYou have summoned 3 dummies to attack " + target.getName() + "!");
+        }
+    }
+
+    @EventHandler
+    public void onPlayerHit(EntityDamageByEntityEvent e) {
+        if(e.getDamager() instanceof Player damaging) {
+            if(e.getEntity() instanceof Player damaged) {
+                lastHitPlayer.put(damaging.getUniqueId(), damaged.getUniqueId());
+            }
+        }
     }
 
     @Override
     public String abilityName() {
         return "Distraction";
-    }
-
-    @EventHandler
-    public void onPlayerHit(EntityDamageByEntityEvent event) {
-        if (event.getDamager() instanceof Player && event.getEntity() instanceof Player) {
-            Player attacker = (Player) event.getDamager();
-            Player victim = (Player) event.getEntity();
-            lastHitPlayer.put(attacker.getUniqueId(), victim.getUniqueId());
-        }
     }
 }

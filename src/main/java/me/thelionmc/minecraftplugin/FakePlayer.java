@@ -5,9 +5,15 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Iterators;
+import com.mojang.authlib.GameProfile;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
+import net.minecraft.world.entity.EntityType;
+import com.mojang.authlib.properties.Property;
 
 import java.util.*;
 
@@ -17,36 +23,56 @@ public class FakePlayer {
     private final int entityId;
     private final WrappedGameProfile profile;
     private final ProtocolManager protocolManager;
-    private final Location location;
+    private final Location loc;
+    private final CraftPlayer player;
 
-    public FakePlayer(Player originalPlayer, Location location) {
+    public FakePlayer(Player originalPlayer) {
         this.uuid = originalPlayer.getUniqueId();
         this.name = originalPlayer.getName();
         this.entityId = (int) (Math.random() * Integer.MAX_VALUE);
         this.profile = new WrappedGameProfile(uuid, name);
         this.protocolManager = ProtocolLibrary.getProtocolManager();
-        this.location = location;
+        this.loc = originalPlayer.getLocation();
+        this.player = (CraftPlayer) originalPlayer;
 
-        spawn(originalPlayer);
+        spawn();
     }
 
-    private void spawn(Player originalPlayer) {
-        Location loc = originalPlayer.getLocation();
+    private void spawn() {
+        //ADDING THE PLAYER
+        PacketContainer addPlayer = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
+        addPlayer.getPlayerInfoActions().write(0, EnumSet.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER));
 
+        WrappedGameProfile profile = WrappedGameProfile.fromPlayer(player);
+        //profile.getProperties().put("textures", WrappedSignedProperty.fromHandle(new Property("textures", getSkin().value(), getSkin().signature())));
+
+        PlayerInfoData playerInfoData = new PlayerInfoData(
+                profile,
+                player.getPing(),
+                EnumWrappers.NativeGameMode.SURVIVAL,
+                WrappedChatComponent.fromText(name)
+        );
+
+        addPlayer.getPlayerInfoDataLists().write(1, Collections.singletonList(playerInfoData));
+
+        //SPAWNING THE ENTITY
         PacketContainer fake = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
         fake.getModifier().writeDefaults();
-        var mod = fake.getModifier();
 
-        mod.write(0, entityId); //id for teh entity
-        mod.write(1, uuid); //uuid for the entity
-        mod.write(2, 2); //player id
-        mod.write(3, loc.getX());
-        mod.write(4, loc.getY());
-        mod.write(5, loc.getZ());
-        mod.write(6, loc.getPitch());
-        mod.write(7, loc.getYaw());
+        fake.getModifier().write(0, entityId); //id for teh entity
+        fake.getModifier().write(1, uuid); //uuid for the entity
+        fake.getModifier().write(2, EntityType.PLAYER);
+        fake.getModifier().write(3, loc.getX()); //(int) Math.round(loc.getX()))
+        fake.getModifier().write(4, loc.getY());
+        fake.getModifier().write(5, loc.getZ());
+        fake.getModifier().write(6, Math.round(loc.getPitch()));//(loc.getPitch() * 256 / 360)
+        fake.getModifier().write(7, Math.round(loc.getYaw())); //loc.getYaw();
+
+
+        player.teleport(new Location(player.getWorld(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch()));
 
         sendPacketToAll(fake);
+        sendPacketToAll(addPlayer);
     }
 
 
@@ -56,9 +82,24 @@ public class FakePlayer {
         sendPacketToAll(destroyPacket);
     }
 
+    private Property getSkin() {
+        GameProfile profile = player.getHandle().getGameProfile();
+        Property textures = Iterables.getFirst(profile.getProperties().get("textures"), null);
+        if (textures == null) {
+            player.sendMessage("ERROR! Please report to an admin ASAP!");
+            return null;
+        }
+        return textures;
+    }
+
+
     private void sendPacketToAll(PacketContainer packet) {
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            protocolManager.sendServerPacket(player, packet);
+        try {
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                protocolManager.sendServerPacket(player, packet);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -69,6 +110,6 @@ public class FakePlayer {
     }
 
     public Location getLocation() {
-        return location;
+        return loc;
     }
 }
