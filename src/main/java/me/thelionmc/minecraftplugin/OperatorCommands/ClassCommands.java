@@ -40,11 +40,14 @@ public class ClassCommands implements CommandExecutor, TabCompleter {
                 return true;
             }
 
-            classManager.setPlayerGroup(target.getUniqueId(), classManager.classMap.get(args[1]));
-            sender.sendMessage(glint + ChatColor.GREEN + "Success! " + args[0] + "'s class is now \"" + classManager.getPlayerGroup(target.getUniqueId()).displayName() + "\"!");
+            if(classManager.setPlayerGroup(target.getUniqueId(), classManager.classMap.get(args[1]))) {
+                sender.sendMessage(glint + ChatColor.GREEN + "Success! " + args[0] + "'s class is now \"" + classManager.getPlayerGroup(target.getUniqueId()).displayName() + "\"!");
+                return true;
+            }
+            sender.sendMessage(glint + ChatColor.RED + "Error! The class \"" + args[1] + "\" is not enabled!");
         }
 
-        return false;
+        return true;
     }
 
     @Override

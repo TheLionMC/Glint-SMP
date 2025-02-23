@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class NinjaAbility1 extends Cooldown implements Ability {
+public class NinjaAbility1 extends Ability {
     Map<UUID, Long> cools = new HashMap<>();
     ShardManager shardManager;
     Plugin plugin;
@@ -28,7 +28,7 @@ public class NinjaAbility1 extends Cooldown implements Ability {
         this.plugin = plugin;
     }
 
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         AttributeInstance fallDamage = player.getAttribute(Attribute.GENERIC_FALL_DAMAGE_MULTIPLIER);
         assert fallDamage != null;
         fallDamage.setBaseValue(0);
@@ -51,6 +51,8 @@ public class NinjaAbility1 extends Cooldown implements Ability {
                 }
             }
         }.runTaskLater(plugin, 5);
+
+        return true;
     }
 
     public String abilityName() {

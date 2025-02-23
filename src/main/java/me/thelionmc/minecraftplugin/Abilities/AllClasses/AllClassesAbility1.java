@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AllClassesAbility1 extends Cooldown implements Ability {
+public class AllClassesAbility1 extends Ability {
     Map<UUID, Long> cools = new HashMap<>();
 
     public AllClassesAbility1() {
@@ -16,8 +16,8 @@ public class AllClassesAbility1 extends Cooldown implements Ability {
         this.cooldownSeconds = 10; // Set custom cooldown for Ability 1
     }
 
-    public void execute(Player player) {
-
+    public boolean execute(Player player) {
+        return true;
     }
 
     public String abilityName() {return "All Classes Ability 1";}

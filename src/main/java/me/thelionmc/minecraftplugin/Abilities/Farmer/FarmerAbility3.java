@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class FarmerAbility3 extends Cooldown implements Ability {
+public class FarmerAbility3 extends Ability {
     Map<UUID, Long> cools = new HashMap<>();
 
     public FarmerAbility3() {
@@ -16,8 +16,8 @@ public class FarmerAbility3 extends Cooldown implements Ability {
         this.cooldownSeconds = 272;
     }
 
-    public void execute(Player player) {
-
+    public boolean execute(Player player) {
+        return true;
     }
 
     public String abilityName() {return "Ability 3 Farmer Class";}

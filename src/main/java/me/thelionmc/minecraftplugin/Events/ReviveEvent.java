@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.events;
+package me.thelionmc.minecraftplugin.Events;
 
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.*;

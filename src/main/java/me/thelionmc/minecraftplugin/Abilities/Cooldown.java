@@ -37,19 +37,4 @@ public abstract class Cooldown {
     }
 
     public int getDefaultCooldownSeconds() { return cooldownSeconds; }
-
-    public abstract void execute(Player player);
-
-    public abstract String abilityName();
-
-    public void useAbility(Player player) {
-        if(!onCooldown(player)) {
-            player.getWorld().playSound(player.getLocation(), Sound.ENTITY_EVOKER_CAST_SPELL, 1, 1);
-            cools.put(player.getUniqueId(), System.currentTimeMillis());
-            execute(player);
-        } else {
-            player.getWorld().playSound(player.getLocation(), Sound.ITEM_SHIELD_BREAK, 1, 1);
-            player.sendMessage(ChatColor.AQUA + abilityName() + ChatColor.YELLOW + " is on cooldown!");
-        }
-    }
 }

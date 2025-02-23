@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 
+import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.Groups.*;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -39,12 +41,12 @@ public class ClassManager implements Listener {
         enabledClassesFile = new File(mainClass.getDataFolder(), "enabledClasses.yml");
 
         this.groupData = YamlConfiguration.loadConfiguration(groupDataFile);
-        groupData.set("classData", playerGroups);
         this.enabledClassesData = YamlConfiguration.loadConfiguration(enabledClassesFile);
 
         populateClassMap();
         populateEnabledClassesList();
         populatePlayerGroupsMap();
+        enableAbilities();
     }
 
     private void populateClassMap() {
@@ -65,19 +67,15 @@ public class ClassManager implements Listener {
             return;
         }
 
-        Map<String, Object> rawMap = classDataSection.getValues(false);
-
-        for (Map.Entry<String, Object> entry : rawMap.entrySet()) {
-            if (entry.getValue() instanceof AbilityGroup) {
-                if (enabledClasses.contains(entry.getValue())) {
-                    playerGroups.put(UUID.fromString(entry.getKey()), (AbilityGroup) entry.getValue());
-                    return;
-                }
-                playerGroups.put(UUID.fromString(entry.getKey()), randomEnabledGroup());
-            }
+        for(String string : classDataSection.getKeys(false)) {
+            Bukkit.getLogger().info(string);
+            playerGroups.put(UUID.fromString(string), classMap.get(groupData.getString(string)));
         }
-    } public void saveClassData() {
-        groupData.set("classData", playerGroups);
+    } public void saveGroupData() {
+        for(UUID uuid : playerGroups.keySet()) {
+            groupData.set(uuid.toString(), playerGroups.get(uuid).displayName());
+        }
+
         try {
             groupData.save(groupDataFile);
         } catch (IOException e) {
@@ -86,17 +84,33 @@ public class ClassManager implements Listener {
     }
 
     public void populateEnabledClassesList() {
-        List<?> rawList = enabledClassesData.getList("groups");
-        if (rawList != null) {
-            for (Object obj : rawList) {
-                if (obj instanceof AbilityGroup) {
-                    enabledClasses.add((AbilityGroup) obj);
-                }
-            }
+        List<String> list = enabledClassesData.getStringList("enabledClasses");
+        if(list.isEmpty()) {
+            enabledClasses.add(randomGroup());
+        }
+
+        for(String s : list) {
+            enabledClasses.add(classMap.get(s));
         }
     } public void saveEnabledClassData() {
-        enabledClassesData.set("enabledClasses", enabledClasses);
-        try {
+        ArrayList<String> enabled = new ArrayList<>();
+        for(AbilityGroup a : enabledClasses) {
+            enabled.add(a.displayName());
+        }
+
+        enabledClassesData.set("enabledClasses", enabled);
+
+        for(AbilityGroup group : classMap.values()) {
+            ArrayList<Integer> enabledAbilities = new ArrayList<>();
+            for(Ability ability : group.getAbilities()) {
+                if(ability.isEnabled()) {
+                    enabledAbilities.add(group.getAbilities().indexOf(ability));
+                }
+            }
+            enabledClassesData.set(group.displayName(), enabledAbilities);
+        }
+
+         try {
             enabledClassesData.save(enabledClassesFile);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -104,25 +118,48 @@ public class ClassManager implements Listener {
 
     }
 
+    private void enableAbilities() {
+        for(String string : enabledClassesData.getKeys(false)) {
+            if(classMap.containsKey(string)) {
+                AbilityGroup group = classMap.get(string);
+                List<Integer> enabledAbilities = enabledClassesData.getIntegerList(string);
+                for (Integer enabledAbility : enabledAbilities) {
+                    group.getAbility(enabledAbility).setEnabled(true);
+                }
+            }
+        }
+    }
+
     public void enablePlayerGroup(AbilityGroup group) {
         if(enabledClasses.contains(group)) {
             return;
         }
         enabledClasses.add(group);
-    } public void disablePlayerGroup(AbilityGroup group) {
-        if(!enabledClasses.contains(group)) {
-            return;
+    } public boolean disablePlayerGroup(AbilityGroup group) {
+        if(!enabledClasses.contains(group) || enabledClasses.size() == 1) {
+            return false;
         }
+
+        enabledClasses.remove(group);
+
         for(UUID uuid : playerGroups.keySet()) {
             if(playerGroups.get(uuid) == group) {
                 playerGroups.put(uuid, randomEnabledGroup());
             }
         }
-        enabledClasses.remove(group);
+        return true;
     }
 
-    public void setPlayerGroup(UUID playerID, AbilityGroup group) {
-        playerGroups.put(playerID, group);
+    public boolean isEnabled(AbilityGroup group) {
+        return enabledClasses.contains(group);
+    }
+
+    public boolean setPlayerGroup(UUID playerID, AbilityGroup group) { //returns false if its disabled
+        if(isEnabled(group)) {
+            playerGroups.put(playerID, group);
+            return true;
+        }
+        return false;
     } public AbilityGroup getPlayerGroup(UUID playerID) {
         return playerGroups.get(playerID);
     } public boolean playerHasGroup(UUID playerId) {

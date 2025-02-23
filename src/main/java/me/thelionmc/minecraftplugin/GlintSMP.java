@@ -6,8 +6,8 @@ import me.thelionmc.minecraftplugin.PlayerCommands.AbilityKeybinds;
 import me.thelionmc.minecraftplugin.PlayerCommands.Trust;
 import me.thelionmc.minecraftplugin.Tools.CoreProtectTool;
 import me.thelionmc.minecraftplugin.customItems.Shard;
-import me.thelionmc.minecraftplugin.events.Dragondeathevent;
-import me.thelionmc.minecraftplugin.events.ReviveEvent;
+import me.thelionmc.minecraftplugin.Events.Dragondeathevent;
+import me.thelionmc.minecraftplugin.Events.ReviveEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
@@ -49,6 +49,8 @@ public class GlintSMP extends JavaPlugin implements Listener {
     Trust trust;
     DisableClass disableClass;
     EnableClass enableClass;
+    EnableAbility enableAbility;
+    DisableAbility disableAbility;
 
     SetCooldown resetcooldown;
 
@@ -79,6 +81,8 @@ public class GlintSMP extends JavaPlugin implements Listener {
         trust = new Trust(trustManager);
         disableClass = new DisableClass(classManager);
         enableClass = new EnableClass(classManager);
+        enableAbility = new EnableAbility(classManager);
+        disableAbility = new DisableAbility(classManager);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(staffMenu, this);
@@ -113,6 +117,9 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("distrust").setExecutor(trust);
         getCommand("enableclass").setExecutor(enableClass);
         getCommand("disableclass").setExecutor(disableClass);
+        getCommand("enabledClasses").setExecutor(new EnabledClasses(classManager));
+        getCommand("enableability").setExecutor(enableAbility);
+        getCommand("disableability").setExecutor(disableAbility);
 
         getCommand("gettool").setTabCompleter(new Tools());
         getCommand("summonboss").setTabCompleter(summonBoss);
@@ -120,8 +127,6 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("withdraw").setTabCompleter(new ShardManager(this, this));
         getCommand("enableclass").setTabCompleter(enableClass);
         getCommand("disableclass").setTabCompleter(disableClass);
-
-        ConfigurationSerialization.registerClass(AbilityGroup.class);
 
         //In case of a /reload
         for(Player player : Bukkit.getOnlinePlayers()) {
@@ -202,7 +207,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getLogger().info("GlintSMP shut down.");
         shardManager.saveShardData();
         trustManager.saveTrustData();
-        classManager.saveClassData();
+        classManager.saveGroupData();
         classManager.saveEnabledClassData();
     }
 }

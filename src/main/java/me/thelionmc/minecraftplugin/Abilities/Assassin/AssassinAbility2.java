@@ -17,7 +17,7 @@ import org.bukkit.scheduler.BukkitRunnable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
 
-public class AssassinAbility2 extends Cooldown implements Ability {
+public class AssassinAbility2 extends Ability {
     Map<UUID, Long> cools = new HashMap<>();
     private final Plugin plugin;
     private final GlintSMP mainClass;
@@ -37,7 +37,7 @@ public class AssassinAbility2 extends Cooldown implements Ability {
         return this.shardData.getInt(playerID.toString(), 0);
     }
 
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         int shards = getShards(player.getUniqueId());
         for (Player target : Bukkit.getOnlinePlayers()) {
             sendGlowPacket(player, target, true);
@@ -51,6 +51,8 @@ public class AssassinAbility2 extends Cooldown implements Ability {
                 }
             }
         }.runTaskLater(plugin, (long) (3 * 0.25 + shards));
+
+        return true;
     }
 
     public String abilityName() {

@@ -1,4 +1,4 @@
-package me.thelionmc.minecraftplugin.events;
+package me.thelionmc.minecraftplugin.Events;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;

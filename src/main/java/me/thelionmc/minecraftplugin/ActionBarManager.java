@@ -1,12 +1,10 @@
 package me.thelionmc.minecraftplugin;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 import java.util.UUID;
 
 import me.thelionmc.minecraftplugin.Abilities.Ability;
-import me.thelionmc.minecraftplugin.Abilities.Cooldown;
 import me.thelionmc.minecraftplugin.Groups.AbilityGroup;
 import net.md_5.bungee.api.ChatColor;
 import net.md_5.bungee.api.ChatMessageType;
@@ -42,16 +40,18 @@ public class ActionBarManager implements Listener {
 
                     if(selectedAbility.containsKey(player.getUniqueId())) {
                         Ability ability = group.getAbilities().get(selectedAbility.get(player.getUniqueId()) - 1);
-                        String initialString = ChatColor.AQUA + group.displayName() + ChatColor.WHITE + " | " + ChatColor.AQUA + ability.abilityName() + ChatColor.WHITE + " | ";
+                        String initialString = ChatColor.AQUA + group.displayName() + " " + (group.getAbilities().indexOf(ability) + 1) + ChatColor.WHITE + " | " + ChatColor.AQUA + ability.displayName() + ChatColor.WHITE + " | ";
                         StringBuilder builder = new StringBuilder(initialString);
 
-                        if(ability.onCooldown(player)) {
-                            long cool = ability.cooldownRemaining(player);
-                            long minutes = (cool / 1000) / 60;
-                            long seconds = (cool / 1000) % 60;
-                            builder.append(ChatColor.YELLOW + "" + minutes + "m " + seconds + "s");
-                        } else {
-                            builder.append(ChatColor.GREEN + "Ready!");
+                        if(ability.isEnabled()) {
+                            if(ability.onCooldown(player)) {
+                                long cool = ability.cooldownRemaining(player);
+                                long minutes = (cool / 1000) / 60;
+                                long seconds = (cool / 1000) % 60;
+                                builder.append(ChatColor.YELLOW + "" + minutes + "m " + seconds + "s");
+                            } else {
+                                builder.append(ChatColor.GREEN + "Ready!");
+                            }
                         }
 
                         player.spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent(String.valueOf(builder)));

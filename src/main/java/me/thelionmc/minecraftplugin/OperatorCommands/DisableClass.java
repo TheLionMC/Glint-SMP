@@ -21,8 +21,13 @@ public class DisableClass implements CommandExecutor, TabCompleter {
             commandSender.sendMessage("This class doesn't exist!");
             return true;
         }
-        cm.disablePlayerGroup(cm.classMap.get(strings[0]));
-        commandSender.sendMessage("Success!");
+
+        if(cm.disablePlayerGroup(cm.classMap.get(strings[0]))) {
+            commandSender.sendMessage("Success!");
+            return true;
+        }
+
+        commandSender.sendMessage("This is the only class enabled, so you cannot disable it! Try enabling another class before disabling this one!");
         return true;
     }
 

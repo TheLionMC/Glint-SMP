@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
-public class MischiefAbility2 extends Cooldown implements Ability {
+public class MischiefAbility2 extends Ability {
     Map<UUID, Long> cools = new HashMap<>();
 
     public MischiefAbility2() {
@@ -23,7 +23,7 @@ public class MischiefAbility2 extends Cooldown implements Ability {
         this.cooldownSeconds = 180; // Set custom cooldown for Mischief Ability 2
     }
 
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         Location location = player.getLocation();
         for (int i = 0; i < 50; i++) {
             Bukkit.getScheduler().runTaskLater(
@@ -39,6 +39,8 @@ public class MischiefAbility2 extends Cooldown implements Ability {
                 ((Player) entity).addPotionEffect(new PotionEffect(PotionEffectType.BLINDNESS, 10*20, 1));
             }
         });
+
+        return true;
     }
 
     public String abilityName() {

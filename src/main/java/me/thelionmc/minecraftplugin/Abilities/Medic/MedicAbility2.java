@@ -21,7 +21,7 @@ import org.bukkit.Location;
 
 import java.util.*;
 
-public class MedicAbility2 extends Cooldown implements Ability, Listener {
+public class MedicAbility2 extends Ability implements Listener {
     private final Plugin plugin;
     private final GlintSMP mainClass;
     private final FileConfiguration shardData;
@@ -44,7 +44,7 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
         return this.shardData.getInt(playerID.toString(), 0);
     }
 
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + "You have started meditating. Do not move more than half a block or take damage!");
 
         int shards = getShards(player.getUniqueId());
@@ -107,6 +107,8 @@ public class MedicAbility2 extends Cooldown implements Ability, Listener {
             }
         }.runTaskTimer(plugin, 0, 20);
         interrupted.remove(player.getUniqueId());
+
+        return true;
     }
 
     @EventHandler

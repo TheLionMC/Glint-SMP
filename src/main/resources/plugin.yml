@@ -1,5 +1,5 @@
 name: GlintSMP
-version: 2.1.7
+version: 2.1.8
 main: me.thelionmc.minecraftplugin.GlintSMP
 api-version: '1.21'
 shardLossRadius: 100
@@ -91,5 +91,17 @@ commands:
   disableclass:
     description: Disables a class.
     usage: /disableClass [className]
+    permission: op
+  enabledClasses:
+    description: Sends a list of all enabled classes.
+    usage: /enableClass [className]
+    permission: op
+  enableability:
+    description: Enables a specified ability.
+    usage: /enableAbility [className] [abilityIndex]
+    permission: op
+  disableability:
+    description: Disables a specified ability.
+    usage: /disableAbility [className] [abilityIndex]
     permission: op
 

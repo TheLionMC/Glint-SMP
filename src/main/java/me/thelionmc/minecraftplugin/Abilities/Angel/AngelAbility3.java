@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class AngelAbility3 extends Cooldown implements Ability {
+public class AngelAbility3 extends Ability {
     Map<UUID, Long> cools = new HashMap<>();
 
     public AngelAbility3() {
@@ -16,8 +16,8 @@ public class AngelAbility3 extends Cooldown implements Ability {
         this.cooldownSeconds = 600;
     }
 
-    public void execute(Player player) {
-
+    public boolean execute(Player player) {
+        return true;
     }
 
     public String abilityName() {return "Ability 3 Angel Class";}

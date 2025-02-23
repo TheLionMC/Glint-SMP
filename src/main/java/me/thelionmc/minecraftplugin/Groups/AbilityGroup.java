@@ -14,7 +14,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class AbilityGroup implements ConfigurationSerializable {
+public abstract class AbilityGroup {
     List<Ability> abilities = new ArrayList<>();
 
     public AbilityGroup() {
@@ -31,15 +31,12 @@ public abstract class AbilityGroup implements ConfigurationSerializable {
         abilities.get(x).useAbility(player);
     }
 
-    @Override
-    public @NotNull Map<String, Object> serialize() {
-        Map<String, Object> map = new HashMap<>();
-        map.put("abilities", abilities);
-        return map;
-    }
-
     public List<Ability> getAbilities() {
         return abilities;
+    }
+
+    public Ability getAbility(int index) {
+        return abilities.get(index);
     }
 
     protected void addAbility(Ability ability) {

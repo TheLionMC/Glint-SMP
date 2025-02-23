@@ -3,7 +3,6 @@ package me.thelionmc.minecraftplugin.Abilities.Mischief;
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import me.thelionmc.minecraftplugin.Abilities.Ability;
-import me.thelionmc.minecraftplugin.Abilities.Cooldown;
 import me.thelionmc.minecraftplugin.FakePlayer;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
@@ -17,7 +16,7 @@ import org.bukkit.plugin.Plugin;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class MischiefAbility3 extends Cooldown implements Ability, Listener {
+public class MischiefAbility3 extends Ability implements Listener {
     private final Map<UUID, UUID> lastHitPlayer = new HashMap<>();
 
     private static final AtomicInteger entityIdCounter = new AtomicInteger(-1000);
@@ -34,16 +33,16 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
     }
 
     @Override
-    public void execute(Player player) {
+    public boolean execute(Player player) {
         UUID lastTargetUUID = lastHitPlayer.get(player.getUniqueId());
         if (lastTargetUUID == null) {
             player.sendMessage("§cYou haven't hit anyone recently!");
-            return;
+            return false;
         }
         Player target = Bukkit.getPlayer(lastTargetUUID);
         if (target == null || !target.isOnline()) {
             player.sendMessage("§cYour last hit target is no longer online.");
-            return;
+            return false;
         }
         Location spawnLoc = target.getLocation();
         int botCount = 1;
@@ -79,6 +78,7 @@ public class MischiefAbility3 extends Cooldown implements Ability, Listener {
          */
             player.sendMessage("§aYou have summoned 3 dummies to attack " + target.getName() + "!");
         }
+        return true;
     }
 
     @EventHandler
