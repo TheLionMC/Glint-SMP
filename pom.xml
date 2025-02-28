@@ -78,7 +78,7 @@
         </dependency>
         <dependency>
             <groupId>org.local</groupId>
-            <artifactId>spigotttttt</artifactId>
+            <artifactId>spigot</artifactId>
             <version>1.21.1-R0.1-SNAPSHOT</version>
         </dependency>
         <dependency>
