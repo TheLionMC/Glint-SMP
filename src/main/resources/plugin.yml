@@ -77,7 +77,7 @@ commands:
     permission: op
   setcooldown:
     description: Allows you to change / set the cooldown of any class
-    usage: /setcooldown [Ability] [NewTimeinSeconds]
+    usage: /setcooldown [Player] [Ability|1|2|3] [NewTimeinSeconds]
   trust:
     description: Allows you to trust a player making your abilities not affect the player
     usage: /trust [playerName]

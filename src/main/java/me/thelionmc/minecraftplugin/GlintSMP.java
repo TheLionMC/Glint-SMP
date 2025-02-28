@@ -51,6 +51,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
     EnableClass enableClass;
     EnableAbility enableAbility;
     DisableAbility disableAbility;
+    SetCommand setcommand;
 
     SetCooldown resetcooldown;
 
@@ -83,6 +84,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         enableClass = new EnableClass(classManager);
         enableAbility = new EnableAbility(classManager);
         disableAbility = new DisableAbility(classManager);
+        setcommand = new SetCommand(this, this, classManager);
 
         getServer().getPluginManager().registerEvents(this, this);
         getServer().getPluginManager().registerEvents(staffMenu, this);
@@ -120,6 +122,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("enabledClasses").setExecutor(new EnabledClasses(classManager));
         getCommand("enableability").setExecutor(enableAbility);
         getCommand("disableability").setExecutor(disableAbility);
+        getCommand("set").setExecutor(setcommand);
 
         getCommand("gettool").setTabCompleter(new Tools());
         getCommand("summonboss").setTabCompleter(summonBoss);
@@ -127,6 +130,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("withdraw").setTabCompleter(new ShardManager(this, this));
         getCommand("enableclass").setTabCompleter(enableClass);
         getCommand("disableclass").setTabCompleter(disableClass);
+        getCommand("set").setTabCompleter(setcommand);
 
         //In case of a /reload
         for(Player player : Bukkit.getOnlinePlayers()) {

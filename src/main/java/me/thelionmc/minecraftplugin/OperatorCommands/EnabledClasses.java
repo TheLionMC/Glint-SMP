@@ -2,6 +2,7 @@ package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import me.thelionmc.minecraftplugin.ClassManager;
 import me.thelionmc.minecraftplugin.Groups.AbilityGroup;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -19,7 +20,7 @@ public class EnabledClasses implements CommandExecutor {
         for(AbilityGroup group : cm.enabledClasses) {
             builder.append(group.displayName() + ", ");
         }
-        commandSender.sendMessage(builder + "");
+        commandSender.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.GREEN + builder);
 
         return true;
     }

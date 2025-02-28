@@ -1,6 +1,7 @@
 package me.thelionmc.minecraftplugin.OperatorCommands;
 
 import me.thelionmc.minecraftplugin.ClassManager;
+import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -18,11 +19,11 @@ public class EnableClass implements CommandExecutor, TabCompleter {
     @Override
     public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
         if(!cm.classMap.containsKey(strings[0])) {
-            commandSender.sendMessage("This class doesn't exist!");
+            commandSender.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "This class doesn't exist!");
             return true;
         }
         cm.enablePlayerGroup(cm.classMap.get(strings[0]));
-        commandSender.sendMessage("Success!");
+        commandSender.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "Success!");
         return true;
     }
 

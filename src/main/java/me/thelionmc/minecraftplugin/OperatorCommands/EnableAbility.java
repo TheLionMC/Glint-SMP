@@ -19,12 +19,12 @@ public class EnableAbility implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String s, @NotNull String[] args) {
         if(args.length != 2) {
-            sender.sendMessage(ChatColor.RED + "2 Arguments Required!");
+            sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "2 Arguments Required!");
             return true;
         }
 
         if(!cm.classMap.containsKey(args[0])) {
-            sender.sendMessage(ChatColor.RED + "Invalid class name!");
+            sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.RED + "Invalid class name!");
             return true;
         }
 
@@ -32,30 +32,30 @@ public class EnableAbility implements CommandExecutor {
         try {
             index = Integer.parseInt(args[1]);
         } catch (NumberFormatException e) {
-            sender.sendMessage(ChatColor.RED + "Invalid ability index; Index must be an integer!");
+            sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.RED + "Invalid ability index; Index must be an integer!");
             return true;
         }
 
         AbilityGroup group = cm.classMap.get(args[0]);
 
         if(index > group.getAbilities().size()) {
-            sender.sendMessage(ChatColor.RED + "Invalid ability index; Index is too large! (Index STARTS at 1!)");
+            sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.RED + "Invalid ability index; Index is too large! (Index STARTS at 1!)");
             return true;
         }
 
         Ability ability = group.getAbility(index - 1);
 
         if(ability.isEnabled()) {
-            sender.sendMessage(ChatColor.RED + "Ability is already enabled!");
+            sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.RED + "Ability is already enabled!");
             return true;
         }
 
         ability.setEnabled(true);
-        sender.sendMessage(ChatColor.GREEN + "Success!");
-        sender.sendMessage(ChatColor.AQUA + "Enabled Abilities of the " + group.displayName() + " class:");
+        sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.GREEN + "Success!");
+        sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " +ChatColor.AQUA + "Enabled Abilities of the " + group.displayName() + " class:");
         for(Ability a : group.getAbilities()) {
             if(a.isEnabled()) {
-                sender.sendMessage(ChatColor.BLUE + a.displayName());
+                sender.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.BLUE + a.displayName());
             }
         }
         return true;

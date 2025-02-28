@@ -51,14 +51,14 @@ public class Tools implements CommandExecutor, TabCompleter, Listener {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (!(sender instanceof Player)) {
-            sender.sendMessage(ChatColor.BLUE + "[Glint SMP] " + ChatColor.GREEN + ChatColor.RED + "Only players can use this command!");
+            sender.sendMessage(ChatColor.BLUE + "[Glint SMP] " + ChatColor.RED + "Only players can use this command!");
             return true;
         }
 
         Player player = (Player) sender;
 
         if (args.length < 1) {
-            player.sendMessage(ChatColor.BLUE + "[Glint SMP] " + ChatColor.GREEN + ChatColor.RED + "Usage: /gettool [tool_name|coreprotect save|coreprotect abandon|coreprotect delete]");
+            player.sendMessage(ChatColor.BLUE + "[Glint SMP] " + ChatColor.RED + "Usage: /gettool [tool_name|coreprotect save|coreprotect abandon|coreprotect delete]");
             return true;
         }
 
