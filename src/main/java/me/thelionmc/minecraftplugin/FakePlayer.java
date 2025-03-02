@@ -5,111 +5,93 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.wrappers.*;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Iterators;
 import com.mojang.authlib.GameProfile;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ClientInformation;
+import net.minecraft.server.level.ServerEntity;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.repository.Pack;
+import net.minecraft.world.entity.HumanoidArm;
+import net.minecraft.world.entity.player.ChatVisiblity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.craftbukkit.v1_21_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
-import net.minecraft.world.entity.EntityType;
-import com.mojang.authlib.properties.Property;
 
 import java.util.*;
 
+import static net.minecraft.core.registries.BuiltInRegistries.ENTITY_TYPE;
+
 public class FakePlayer {
-    private final UUID uuid;
-    private final String name;
-    private final int entityId;
-    private final WrappedGameProfile profile;
-    private final ProtocolManager protocolManager;
-    private final Location loc;
-    private final CraftPlayer player;
+    ProtocolManager manager;
 
-    public FakePlayer(Player originalPlayer) {
-        this.uuid = originalPlayer.getUniqueId();
-        this.name = originalPlayer.getName();
-        this.entityId = (int) (Math.random() * Integer.MAX_VALUE);
-        this.profile = new WrappedGameProfile(uuid, name);
-        this.protocolManager = ProtocolLibrary.getProtocolManager();
-        this.loc = originalPlayer.getLocation();
-        this.player = (CraftPlayer) originalPlayer;
+    Location spawn;
+    UUID uuid;
+    int entityID;
+    Player attacker;
+    Player target;
 
-        spawn();
-    }
+    public FakePlayer(Player attacker, Player target) {
+        this.uuid = UUID.randomUUID();
+        this.entityID = new Random().nextInt(10000, 20000);
+        this.attacker = attacker;
+        this.target = target;
+        this.spawn = attacker.getLocation();
 
-    private void spawn() {
-        //ADDING THE PLAYER
-        PacketContainer addPlayer = new PacketContainer(PacketType.Play.Server.PLAYER_INFO);
-        addPlayer.getPlayerInfoActions().write(0, EnumSet.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER));
+        this.manager = ProtocolLibrary.getProtocolManager();
 
-        WrappedGameProfile profile = WrappedGameProfile.fromPlayer(player);
-        //profile.getProperties().put("textures", WrappedSignedProperty.fromHandle(new Property("textures", getSkin().value(), getSkin().signature())));
-
-        PlayerInfoData playerInfoData = new PlayerInfoData(
-                profile,
-                player.getPing(),
-                EnumWrappers.NativeGameMode.SURVIVAL,
-                WrappedChatComponent.fromText(name)
-        );
-
-        addPlayer.getPlayerInfoDataLists().write(1, Collections.singletonList(playerInfoData));
-
-        //SPAWNING THE ENTITY
-        PacketContainer fake = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
-        fake.getModifier().writeDefaults();
-
-        fake.getModifier().write(0, entityId); //id for teh entity
-        fake.getModifier().write(1, uuid); //uuid for the entity
-        fake.getModifier().write(2, EntityType.PLAYER);
-        fake.getModifier().write(3, loc.getX()); //(int) Math.round(loc.getX()))
-        fake.getModifier().write(4, loc.getY());
-        fake.getModifier().write(5, loc.getZ());
-        fake.getModifier().write(6, Math.round(loc.getPitch()));//(loc.getPitch() * 256 / 360)
-        fake.getModifier().write(7, Math.round(loc.getYaw())); //loc.getYaw();
-
-
-        player.teleport(new Location(player.getWorld(), loc.getX(), loc.getY(), loc.getZ(), loc.getYaw(), loc.getPitch()));
-
-        sendPacketToAll(fake);
-        sendPacketToAll(addPlayer);
-    }
-
-
-    public void destroy() {
-        PacketContainer destroyPacket = protocolManager.createPacket(PacketType.Play.Server.ENTITY_DESTROY);
-        destroyPacket.getIntegerArrays().write(0, new int[]{entityId});
-        sendPacketToAll(destroyPacket);
-    }
-
-    private Property getSkin() {
-        GameProfile profile = player.getHandle().getGameProfile();
-        Property textures = Iterables.getFirst(profile.getProperties().get("textures"), null);
-        if (textures == null) {
-            player.sendMessage("ERROR! Please report to an admin ASAP!");
-            return null;
-        }
-        return textures;
-    }
-
-
-    private void sendPacketToAll(PacketContainer packet) {
-        try {
-            for (Player player : Bukkit.getOnlinePlayers()) {
-                protocolManager.sendServerPacket(player, packet);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void msg(String string) {
         for(Player player : Bukkit.getOnlinePlayers()) {
-            player.sendMessage(string);
+            manager.sendServerPacket(player, playerInfoPacket());
+            manager.sendServerPacket(player, addPlayerPacket());
         }
     }
 
-    public Location getLocation() {
-        return loc;
+    private PacketContainer playerInfoPacket() {
+        PacketContainer p = manager.createPacket(PacketType.Play.Server.PLAYER_INFO);
+
+        p.getPlayerInfoActions().write(0, EnumSet.of(EnumWrappers.PlayerInfoAction.ADD_PLAYER));
+
+        List<PlayerInfoData> playerInfoDataList = new ArrayList<>();
+
+        WrappedGameProfile profile = new WrappedGameProfile(uuid, attacker.getName());
+        WrappedGameProfile attackerProfile = WrappedGameProfile.fromPlayer(attacker);
+
+        profile.getProperties().putAll(attackerProfile.getProperties());
+
+        PlayerInfoData data = new PlayerInfoData(
+                profile,
+                1,
+                EnumWrappers.NativeGameMode.SURVIVAL,
+                WrappedChatComponent.fromText(attacker.getName())
+        );
+        playerInfoDataList.add(data);
+        p.getPlayerInfoDataLists().write(1, playerInfoDataList);
+
+        return p;
+    }
+
+
+    private PacketContainer addPlayerPacket() {
+        PacketContainer p = new PacketContainer(PacketType.Play.Server.SPAWN_ENTITY);
+
+        p.getIntegers().write(0, entityID); //id
+        p.getUUIDs().write(0, uuid); //uuid
+        p.getEntityTypeModifier().write(0, EntityType.PLAYER); //player entity type
+        p.getDoubles() //coords
+                .write(0, spawn.getX())
+                .write(1, spawn.getY())
+                .write(2, spawn.getZ());
+        p.getBytes() //pitch/yaw
+                .write(0, (byte) (spawn.getPitch() * 256.0F / 360.0F))
+                .write(1, (byte) (spawn.getYaw() * 256.0F / 360.0F));
+
+        return p;
     }
 }

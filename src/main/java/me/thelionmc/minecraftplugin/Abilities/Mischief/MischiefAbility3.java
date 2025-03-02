@@ -49,7 +49,7 @@ public class MischiefAbility3 extends Ability implements Listener {
 
         for (int i = 0; i < botCount; i++) {
 
-            FakePlayer dummy = new FakePlayer(player);
+            FakePlayer dummy = new FakePlayer(player, Bukkit.getPlayer(lastTargetUUID));
 /*
             new BukkitRunnable() {
                 @Override
