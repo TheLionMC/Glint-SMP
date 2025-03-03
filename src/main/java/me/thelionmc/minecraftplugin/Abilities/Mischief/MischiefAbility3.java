@@ -2,11 +2,15 @@ package me.thelionmc.minecraftplugin.Abilities.Mischief;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
+import com.mojang.authlib.GameProfile;
 import me.thelionmc.minecraftplugin.Abilities.Ability;
+import me.thelionmc.minecraftplugin.DistractionPlayer;
 import me.thelionmc.minecraftplugin.FakePlayer;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -49,7 +53,13 @@ public class MischiefAbility3 extends Ability implements Listener {
 
         for (int i = 0; i < botCount; i++) {
 
-            FakePlayer dummy = new FakePlayer(player, Bukkit.getPlayer(lastTargetUUID));
+            UUID botId = UUID.randomUUID();
+            GameProfile botProfile = new GameProfile(botId, player.getName());
+            GameProfile originalProfile = ((CraftPlayer) player).getProfile();
+
+            botProfile.getProperties().putAll(originalProfile.getProperties());
+
+            DistractionPlayer distractionPlayer = new DistractionPlayer(player, botId, botProfile, plugin);
 /*
             new BukkitRunnable() {
                 @Override
