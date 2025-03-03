@@ -19,35 +19,42 @@ import net.minecraft.network.protocol.PacketFlow;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.*;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.craftbukkit.v1_21_R1.CraftServer;
 import org.bukkit.craftbukkit.v1_21_R1.CraftWorld;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.bukkit.util.Vector;
+import org.checkerframework.framework.qual.Covariant;
 
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class DistractionPlayer extends ServerPlayer {
     Player original;
+    ServerLevel level;
     Location spawnLocation;
     ProtocolManager manager;
     GameProfile profile;
     Plugin plugin;
 
-    public DistractionPlayer(Player original, UUID fakeUUID, GameProfile fakeProfile, Plugin plugin) {
+    public DistractionPlayer(Player original, Player target, Location location, GameProfile fakeProfile, Plugin plugin) {
         super(
                 ((CraftServer) Bukkit.getServer()).getServer(),
                 ((CraftWorld) original.getWorld()).getHandle(),
@@ -55,9 +62,10 @@ public class DistractionPlayer extends ServerPlayer {
                 ClientInformation.createDefault()
         );
 
+        this.level = ((CraftWorld) original.getWorld()).getHandle();
         this.profile = fakeProfile;
         this.original = original;
-        this.spawnLocation = original.getLocation();
+        this.spawnLocation = location;
         this.manager = ProtocolLibrary.getProtocolManager();
         this.plugin = plugin;
 
@@ -72,18 +80,32 @@ public class DistractionPlayer extends ServerPlayer {
         this.setGameMode(GameType.SURVIVAL);
         this.getAbilities().flying = false;
 
-        connection = new ServerGamePacketListenerImpl(
-                ((CraftServer) Bukkit.getServer()).getServer(),
-                new DummyConnection(),
-                this,  // 'this' is your fake ServerPlayer
-                new CommonListenerCookie(profile, 0, ClientInformation.createDefault(), false)
-        );
+        connection = new TutNetHandler(server, new TutNetworkManager(PacketFlow.CLIENTBOUND), this, profile);
+        getBukkitEntity().setNoDamageTicks(0);
 
+        level.addFreshEntity(this);
 
+        new BukkitRunnable() {
+            @Override
+            public void run () {
+                if(getBukkitEntity().getLocation().distance(target.getLocation()) > 50) {
+                    deletePlayer();
+                    cancel();
+                }
 
-        ((CraftWorld) original.getWorld()).getHandle().addFreshEntity(this);
+                Location targetLocation = target.getLocation().clone().add(0, target.getEyeHeight(), 0);
+                Vector direction = targetLocation.toVector().subtract(getBukkitEntity().getLocation().toVector());
+                float yaw = (float) Math.toDegrees(Math.atan2(direction.getZ(), direction.getX())) - 90;
+                float pitch = (float) -Math.toDegrees(Math.atan2(direction.getY(), Math.sqrt(direction.getX() * direction.getX() + direction.getZ() * direction.getZ())));
 
-        setDeltaMovement(0, 2, 0);
+                setRot(yaw, pitch);
+                setYHeadRot(yaw);
+                setSprinting(true);
+                if(getDeltaMovement().x + getDeltaMovement().y <= 0) {
+                    setSprinting(false);
+                }
+            }
+        }.runTaskTimer(plugin, 0, 1);
     }
 
     private PacketContainer playerInfoPacket() {
@@ -124,25 +146,54 @@ public class DistractionPlayer extends ServerPlayer {
 
         return p;
     }
+
+    @Override
+    public void tick(){
+        super.tick();
+        doTick();
+    }
+
+    @Override
+    public boolean hurt(DamageSource damageSource, float f) {
+        if (this.isBlocking()) {
+            //block the attack idk how lmao
+            this.playSound(SoundEvents.SHIELD_BLOCK, 0.8F, 0.8F + this.level.random.nextFloat() * 0.4F);
+        }
+        boolean damaged = super.hurt(damageSource, f);
+        if (damaged) {
+            if (this.hurtMarked) {
+                this.hurtMarked = false;
+                Bukkit.getScheduler().runTask(plugin, () -> this.hurtMarked = true);
+            }
+        }
+        return damaged;
+    }
+
+    public void deletePlayer() {
+        double range = 0.5d;
+        Random r = new Random();
+        Location l = getBukkitEntity().getLocation();
+        for(int i = 0; i < 10; i++) {
+            getBukkitEntity().getWorld().spawnParticle(Particle.ASH, l.getX() + r.nextDouble(range), l.getY() + + r.nextDouble(range), l.getZ() + + r.nextDouble(range), 1);
+        }
+        getBukkitEntity().kickPlayer("Deleted!");
+        for(Player p : Bukkit.getOnlinePlayers()) {
+            p.sendMessage("KILLED BOT!");
+        }
+    }
+
 }
 
-class DummyConnection extends Connection {
-    public DummyConnection() {
-        super(PacketFlow.SERVERBOUND);
+class TutNetHandler extends ServerGamePacketListenerImpl {
+    public TutNetHandler(MinecraftServer minecraftserver, Connection networkmanager, ServerPlayer entityplayer, GameProfile profile) {
+        super(minecraftserver, networkmanager, entityplayer, new CommonListenerCookie(profile, 0, ClientInformation.createDefault(), false));
     }
-
     @Override
-    public void channelActive(ChannelHandlerContext ctx) {
-        // No operation for dummy connection
+    public void send(Packet<?> packet) {
     }
-
-    @Override
-    public void channelInactive(ChannelHandlerContext ctx) {
-        // No operation for dummy connection
-    }
-
-    @Override
-    public void exceptionCaught(ChannelHandlerContext ctx, Throwable cause) {
-        // Suppress exceptions for dummy connection
+}
+class TutNetworkManager extends Connection {
+    public TutNetworkManager(PacketFlow enumprotocoldirection) {
+        super(enumprotocoldirection);
     }
 }

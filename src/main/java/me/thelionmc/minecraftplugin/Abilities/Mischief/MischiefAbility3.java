@@ -5,16 +5,16 @@ import com.comphenix.protocol.ProtocolManager;
 import com.mojang.authlib.GameProfile;
 import me.thelionmc.minecraftplugin.Abilities.Ability;
 import me.thelionmc.minecraftplugin.DistractionPlayer;
-import me.thelionmc.minecraftplugin.FakePlayer;
 import me.thelionmc.minecraftplugin.GlintSMP;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.attribute.Attribute;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.craftbukkit.v1_21_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.Plugin;
 
 import java.util.*;
@@ -25,6 +25,7 @@ public class MischiefAbility3 extends Ability implements Listener {
 
     private static final AtomicInteger entityIdCounter = new AtomicInteger(-1000);
     private final ProtocolManager protocolManager = ProtocolLibrary.getProtocolManager();
+    private final Map<OfflinePlayer, DistractionPlayer> bots = new HashMap<>();
 
     Plugin plugin;
 
@@ -59,7 +60,8 @@ public class MischiefAbility3 extends Ability implements Listener {
 
             botProfile.getProperties().putAll(originalProfile.getProperties());
 
-            DistractionPlayer distractionPlayer = new DistractionPlayer(player, botId, botProfile, plugin);
+            DistractionPlayer distractionPlayer = new DistractionPlayer(player, target, player.getLocation(), botProfile, plugin);
+            bots.put(target, distractionPlayer);
 /*
             new BukkitRunnable() {
                 @Override
@@ -97,6 +99,14 @@ public class MischiefAbility3 extends Ability implements Listener {
             if(e.getEntity() instanceof Player damaged) {
                 lastHitPlayer.put(damaging.getUniqueId(), damaged.getUniqueId());
             }
+        }
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent e) {
+        if(bots.containsKey(e.getPlayer())) {
+            OfflinePlayer p = e.getPlayer();
+            bots.get(p).deletePlayer();
         }
     }
 
