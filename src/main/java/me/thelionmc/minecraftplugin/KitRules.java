@@ -29,13 +29,13 @@ import java.util.logging.Level;
 public class KitRules implements Listener {
     private Plugin plugin;
     private int combatTimeSeconds = 180;
-    private int pearlCap = 5;
+    private int pearlCap = 0;
     private int gapCap = 128;
-    private int xpCap = 64;
+    private int xpCap = 128;
     private int cobCap = 64;
     private int notchCap = 0;
     private int totemCap = 0;
-    private int chorusCap = 64;
+    private int chorusCap = 32;
     private int cartCap = 0;
     private GlintSMP main;
     private Map<UUID, Long> playerStartFightingTime = new HashMap<>();

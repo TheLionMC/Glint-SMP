@@ -81,7 +81,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
             player.sendTitle(ChatColor.RED + "-1", ChatColor.RED + "You have lost a shard");
             player.playSound(player.getLocation(), Sound.BLOCK_AMETHYST_BLOCK_BREAK,5.0F,1.0F);
             e.getDrops().add(shard);
-        } else {
+        } else if (this.getShards(playerID) >= 1) {
             this.setShards(playerID, 3);
             BanList banList = Bukkit.getBanList(Type.NAME);
             String reason = "You ran out of shards!";
@@ -133,7 +133,7 @@ public class ShardManager implements Listener, CommandExecutor, TabCompleter {
                     int amount = Integer.parseInt(args[0]);
                     if (amount <= 0) {
                         player.sendMessage(ChatColor.BLUE + "[GlintSMP] " + ChatColor.RED + "You can't withdraw a negative amount of Invis Shards.");
-                    } else if (getShards(player.getUniqueId()) >= amount) {
+                    } else if (getShards(player.getUniqueId()) >= amount + 1) {
                         mainClass.shard.setAmount(amount);
                         HashMap<Integer, ItemStack> remainingItems = player.getInventory().addItem(mainClass.shard);
                         if (!remainingItems.isEmpty()) {

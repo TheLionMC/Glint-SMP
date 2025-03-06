@@ -1,6 +1,5 @@
 package me.thelionmc.minecraftplugin;
 
-import me.thelionmc.minecraftplugin.Groups.AbilityGroup;
 import me.thelionmc.minecraftplugin.OperatorCommands.*;
 import me.thelionmc.minecraftplugin.PlayerCommands.AbilityKeybinds;
 import me.thelionmc.minecraftplugin.PlayerCommands.Trust;
@@ -12,7 +11,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
-import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -52,7 +50,6 @@ public class GlintSMP extends JavaPlugin implements Listener {
     EnableAbility enableAbility;
     DisableAbility disableAbility;
     SetCommand setcommand;
-
     SetCooldown resetcooldown;
 
     public static Shard shard;
@@ -123,6 +120,7 @@ public class GlintSMP extends JavaPlugin implements Listener {
         getCommand("enableability").setExecutor(enableAbility);
         getCommand("disableability").setExecutor(disableAbility);
         getCommand("set").setExecutor(setcommand);
+        getCommand("test").setExecutor(new PrivateTestCommand());
 
         getCommand("gettool").setTabCompleter(new Tools());
         getCommand("summonboss").setTabCompleter(summonBoss);

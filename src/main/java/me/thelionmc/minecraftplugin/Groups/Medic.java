@@ -22,7 +22,7 @@ public class Medic extends AbilityGroup {
 
     @Override
     protected void defineAbilities() {
-        addAbility(new MedicAbility1());
+        addAbility(new MedicAbility1(plugin));
         if(plugin == null) throw new IllegalArgumentException();
         addAbility(new MedicAbility2(plugin, mainClass));
         addAbility(new MedicAbility3());

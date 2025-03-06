@@ -95,6 +95,7 @@ public class MedicAbility2 extends Ability implements Listener {
                     player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, particleLoc, 1, 0, 0, 0, 0);
                 }
                 angle += Math.PI / 16;
+                player.getWorld().spawnParticle(Particle.HEART, player.getLocation(), 1,0,0,0,0);
 
                 timeLeft--;
                 if (timeLeft <= 0) {

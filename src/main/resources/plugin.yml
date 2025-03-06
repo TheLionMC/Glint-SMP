@@ -1,5 +1,5 @@
 name: GlintSMP
-version: 2.2.0
+version: 2.2.3
 main: me.thelionmc.minecraftplugin.GlintSMP
 api-version: '1.21'
 shardLossRadius: 100
@@ -107,5 +107,9 @@ commands:
   set:
     description: set
     usage: /set and then yeah and then the other thing
+    permission: op
+  test:
+    description: Used to test out commands before implementing them
+    usage: /test [Action]
     permission: op
 
